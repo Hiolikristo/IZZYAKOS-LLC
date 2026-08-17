@@ -1,0 +1,21 @@
+name: IZZYAKOS Sponsor Surface Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  static-acceptance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Validate sponsor surface
+        run: python3 scripts/static_gate.py
