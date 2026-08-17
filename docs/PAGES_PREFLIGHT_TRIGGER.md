@@ -1,0 +1,1 @@
+Temporary non-runtime trigger for the Rev1 GitHub Pages enablement preflight.
