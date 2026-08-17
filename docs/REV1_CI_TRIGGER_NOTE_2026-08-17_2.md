@@ -1,1 +1,0 @@
-No runtime change. This note exists only to keep the Rev1 sponsor-surface acceptance review branch ahead of main while CI evaluates all company and venture pages.
