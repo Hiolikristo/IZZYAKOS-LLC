@@ -6,7 +6,13 @@ from urllib.parse import urlparse
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-HTML_FILES = [ROOT / "index.html", ROOT / "fastpath" / "index.html"]
+HTML_FILES = [
+    ROOT / "index.html",
+    ROOT / "fastpath" / "index.html",
+    ROOT / "tracebridge" / "index.html",
+    ROOT / "chopx" / "index.html",
+    ROOT / "accra" / "index.html",
+]
 
 
 class LinkParser(HTMLParser):
