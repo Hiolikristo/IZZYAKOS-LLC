@@ -81,7 +81,14 @@ for phrase in required_truth:
     if phrase not in text:
         fail(f"missing truth-boundary phrase: {phrase}")
 
-for forbidden in ["100% match", "guaranteed hire", "ats pass", "production candidate data"]:
+for forbidden in [
+    "100% match",
+    "guaranteed hire",
+    "guaranteed ats pass",
+    "will pass ats",
+    "ats pass score",
+    "production candidate data is included",
+]:
     if forbidden in text:
         fail(f"forbidden reviewer claim present: {forbidden}")
 
