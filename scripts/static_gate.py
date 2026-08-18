@@ -15,19 +15,50 @@ HTML_FILES = [
     ROOT / "accra" / "index.html",
 ]
 
+CONTENT_CONTRACTS = {
+    "index.html": [
+        "FastPath", "TRACEBridge", "CHOPX", "My Accra", "People", "Work", "Movement", "Commerce",
+        "Cohesion, not collection", "What the CTA does", "Current commercialization focus",
+    ],
+    "fastpath/index.html": [
+        "resume", "ATS Core V3", "pathway", "current jobs", "candidate packet", "local help",
+        "Supported", "Partial", "Unknown", "Gap", "voice", "industry-specific",
+    ],
+    "tracebridge/index.html": [
+        "IFS Cloud", "Quality", "label", "physical verification", "Tool Crib", "SCAN OUT", "SCAN IN", "synthetic",
+    ],
+    "chopx/index.html": [
+        "economic miles", "tip", "consent", "compliance", "field evidence", "Sprint 5E", "pre-production",
+    ],
+    "accra/index.html": [
+        "customer", "pickup", "inventory", "receiving", "aisle", "scan-pick", "owner", "payment",
+    ],
+}
+
 
 class LinkParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
-        self.links: list[tuple[str, str]] = []
+        self.links: list[dict[str, str]] = []
         self.ids: set[str] = set()
+        self.text: list[str] = []
 
     def handle_starttag(self, tag: str, attrs):
         data = dict(attrs)
         if "id" in data:
             self.ids.add(data["id"])
         if tag == "a" and "href" in data:
-            self.links.append((data["href"], data.get("class", "")))
+            self.links.append({
+                "href": data["href"],
+                "class": data.get("class", ""),
+                "purpose": data.get("data-purpose", ""),
+                "next": data.get("data-next", ""),
+            })
+
+    def handle_data(self, data: str):
+        clean = " ".join(data.split())
+        if clean:
+            self.text.append(clean)
 
 
 def fail(message: str) -> None:
@@ -56,34 +87,47 @@ for html_file in HTML_FILES:
 
     parser = LinkParser()
     parser.feed(html_file.read_text(encoding="utf-8"))
+    rel = str(html_file.relative_to(ROOT))
 
     if not parser.links:
-        fail(f"no CTAs/links found: {html_file.relative_to(ROOT)}")
+        fail(f"no CTAs/links found: {rel}")
 
-    for href, _ in parser.links:
+    visible_text = " ".join(parser.text).lower()
+    for required in CONTENT_CONTRACTS.get(rel, []):
+        if required.lower() not in visible_text:
+            fail(f"missing product-explanation contract in {rel}: {required}")
+
+    for link in parser.links:
+        href = link["href"]
         normalized = href.strip().lower()
         if normalized in {"", "#"}:
-            fail(f"empty/dead href in {html_file.relative_to(ROOT)}")
+            fail(f"empty/dead href in {rel}")
         if normalized.startswith("javascript:"):
-            fail(f"javascript href in {html_file.relative_to(ROOT)}: {href}")
+            fail(f"javascript href in {rel}: {href}")
         if any(token in normalized for token in ("example.com", "localhost", "127.0.0.1", "todo")):
-            fail(f"placeholder URL in {html_file.relative_to(ROOT)}: {href}")
+            fail(f"placeholder URL in {rel}: {href}")
 
         parsed = urlparse(href)
         if parsed.scheme in {"http", "https"} and parsed.netloc == "fastpath-v0.vercel.app":
             fail("stale FastPath short alias must not be used for sponsor review")
 
+        # Major visible CTA buttons on the company/product pages must explain purpose and destination.
+        if rel != "fastpath/demo/index.html" and "btn" in link["class"].split():
+            if not link["purpose"].strip() or not link["next"].strip():
+                fail(f"button CTA missing data-purpose/data-next in {rel}: {href}")
+
         local_target = target_file(html_file, href)
         if local_target is not None and not local_target.exists():
             fail(
-                f"broken local target in {html_file.relative_to(ROOT)}: "
+                f"broken local target in {rel}: "
                 f"{href} -> {local_target.relative_to(ROOT) if ROOT in local_target.parents else local_target}"
             )
 
         if parsed.fragment and not parsed.path:
             if parsed.fragment not in parser.ids:
-                fail(f"missing fragment target in {html_file.relative_to(ROOT)}: #{parsed.fragment}")
+                fail(f"missing fragment target in {rel}: #{parsed.fragment}")
 
 print("PASS: IZZYAKOS sponsor surface static gate")
 print("pages=" + ",".join(str(p.relative_to(ROOT)) for p in HTML_FILES))
 print("dead_href=0 placeholder_url=0 broken_local_target=0 stale_fastpath_alias=0")
+print("product_explanation_contract=present cta_purpose_metadata=present")
