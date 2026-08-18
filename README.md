@@ -1,32 +1,73 @@
-# IZZYAKOS LLC — venture front door
+# IZZYAKOS LLC — one system, four infrastructure layers
 
-Static, dependency-free company and venture-review site prepared for the August 2026 FastPath Rev1 closeout.
+Static, dependency-free company and reviewer site for the August 2026 Rev1 closeout.
 
-## Routes
+IZZYAKOS is presented as one infrastructure thesis expressed through four separate applications:
 
-- `/` — IZZYAKOS LLC venture-studio landing page
-- `/fastpath/` — FastPath sponsor / partner reviewer landing page
+- **FastPath / People** — workforce evidence and opportunity readiness
+- **TRACEBridge / Work** — operational integrity and traceability
+- **CHOPX / Movement** — last-mile fairness, consent and evidence
+- **My Accra International Market / Commerce** — merchant operations and field execution
 
-The FastPath page intentionally links onward to the current FastPath Vercel production alias:
+FastPath is the single current Rev1 market-validation priority. The other layers demonstrate repeatable systems discipline; they are not four simultaneous fundraising asks.
 
-`https://fastpath-v0-pantrysterllcs-projects-b7b5c455.vercel.app/#/home`
+## Public routes
 
-That FastPath deployment must be public to anonymous external reviewers before the final Rev1 link is submitted. Do not replace it with the stale `fastpath-v0.vercel.app` alias unless that alias is explicitly rebound to the frozen release candidate and revalidated.
+- `/` — IZZYAKOS company thesis and four-layer system
+- `/fastpath/` — FastPath Rev1 / partner brief
+- `/fastpath/demo/` — account-free, fictional-data interactive reviewer demo
+- `/tracebridge/` — TRACEBridge infrastructure brief
+- `/chopx/` — CHOPX / ChopExpress infrastructure brief
+- `/accra/` — My Accra merchant implementation brief
 
-## Domain plan
+## FastPath review strategy
 
-Preferred topology once the company-domain spelling is confirmed and DNS is available:
+The public reviewer path no longer depends on Vercel Authentication.
 
-- company root → IZZYAKOS LLC landing page
-- `company-domain/fastpath/` → FastPath reviewer brief
-- optional `fastpath.company-domain` → redirect to `/fastpath/`
-- FastPath reviewer brief → audited FastPath MVP
+`/fastpath/demo/` demonstrates the core mechanism with fictional data:
 
-Do not configure a `CNAME` file until the exact owned company domain is confirmed. `FastPad.com` is not part of this release plan.
+1. specific job target;
+2. candidate-controlled evidence;
+3. Supported / Partial / Unknown / Gap mapping;
+4. gap-to-action routing;
+5. candidate-controlled output.
+
+The demo is deliberately labeled as mechanism proof, **not** customer traction, a hiring prediction, a live job posting or a production candidate record.
+
+The deeper FastPath V0.6.1 application remains the authenticated release candidate until its production protection scope is intentionally changed and logged-out acceptance passes. Do not use the stale `fastpath-v0.vercel.app` alias as release evidence.
+
+## Domain lock
+
+Canonical company domain: **`izzyakos.com`**.
+
+The repository contains `CNAME = izzyakos.com`. The domain is already registered. Publication still requires the hosting control plane to be enabled and the domain DNS to point at the selected host.
+
+The speech-to-text variant `iziacos.com` is not the company brand and must not replace IZZYAKOS in release materials.
+
+## Acceptance gates
+
+`IZZYAKOS Sponsor Surface Gate` validates all six public HTML surfaces for:
+
+- dead / empty links;
+- broken local targets;
+- missing fragments;
+- placeholder URLs;
+- stale FastPath alias usage.
+
+A separate reviewer-demo gate validates the five-step demo control contract and required truth-boundary language.
 
 ## Release discipline
 
-1. Keep the corporate landing independent of the FastPath application release branch.
-2. Keep public claims at MVP / pre-pilot level unless documented partner or pilot evidence exists.
-3. Confirm every external CTA from a logged-out browser before sponsor submission.
-4. Freeze the public URL, FastPath commit SHA and explainer video together for the final packet.
+1. Keep FastPath as the one Rev1 market-validation ask.
+2. Keep public claims at MVP / pre-pilot level unless documented human/customer evidence exists.
+3. Do not expose confidential candidate information in the reviewer demo or video.
+4. Publish `izzyakos.com`, then test the exact domain logged out on desktop and mobile.
+5. Freeze the company URL, reviewer demo, full FastPath release SHA and final walkthrough together for the submission packet.
+
+## Current internal evidence
+
+- company/four-layer sponsor surface: source acceptance green;
+- account-free FastPath reviewer demo: acceptance green;
+- FastPath full build: deployment/build evidence green, production protection still intentional;
+- FastPath backend: 24/24 public tables have RLS enabled; controlled non-staff isolation probe returned zero unrelated candidate rows;
+- remaining release blocker: publish the company domain and complete live logged-out acceptance.
