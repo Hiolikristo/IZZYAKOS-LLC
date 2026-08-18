@@ -2,6 +2,8 @@
 
 Static, dependency-free company and reviewer site for the August 2026 Rev1 closeout.
 
+**Canonical Rev1 submission source:** `docs/REV1_CANONICAL_SUBMISSION_2026-08-18.md`
+
 IZZYAKOS is presented as one infrastructure thesis expressed through four separate applications:
 
 - **FastPath / People** — workforce evidence and opportunity readiness
