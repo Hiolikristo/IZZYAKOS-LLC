@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Pantryster coordinates food, shelter, transportation, senior delivery, volunteers, donors and verified community resources for a Columbus, Ohio pilot.">
+<meta name="theme-color" content="#0d6b4d">
+<title>Pantryster — Community Resource Infrastructure</title>
+<style>
+:root{--ink:#10221a;--green:#0d6b4d;--green2:#0a4f3a;--gold:#f0b429;--cream:#fffaf0;--paper:#fff;--muted:#627068;--line:#dce5df}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--cream);color:var(--ink)}
+a{color:inherit}main{min-height:100vh}.topbar{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:18px clamp(20px,5vw,72px);background:rgba(255,250,240,.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.brandText{display:flex;flex-direction:column;gap:2px}.brandText strong{font-size:1.4rem;letter-spacing:.12em}.tagline{font-size:.82rem;color:var(--muted)}nav{display:flex;gap:22px;font-weight:700;font-size:.92rem}nav a{text-decoration:none}
+.hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(300px,.6fr);gap:34px;padding:clamp(72px,9vw,132px) clamp(20px,7vw,110px);background:radial-gradient(circle at 80% 5%,rgba(240,180,41,.24),transparent 24%),linear-gradient(135deg,#f8fff9,#fff6df)}
+.hero h1{font-size:clamp(3rem,7vw,6.8rem);line-height:.94;letter-spacing:-.06em;margin:14px 0 24px;max-width:11ch}.lede{font-size:clamp(1.08rem,1.7vw,1.35rem);line-height:1.7;color:#42544a;max-width:760px}
+.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:.76rem;font-weight:900;color:var(--green)}.actions{display:flex;gap:14px;margin-top:32px;flex-wrap:wrap}.primary,.secondary{padding:14px 19px;border-radius:999px;text-decoration:none;font-weight:900}.primary{background:var(--green);color:#fff}.secondary{border:1px solid var(--green);color:var(--green)}
+.statusCard{align-self:end;background:var(--green2);color:#fff;padding:28px;border-radius:24px;box-shadow:0 24px 60px rgba(13,107,77,.18)}.statusCard span{font-size:.75rem;text-transform:uppercase;letter-spacing:.14em;color:#d7f7e8}.statusCard h2{font-size:1.65rem;margin:10px 0}.statusCard p{line-height:1.65;color:#e8f7ef}
+.section{padding:78px clamp(20px,7vw,110px)}.sectionHead{max-width:760px;margin-bottom:30px}.section h2,.band h2{font-size:clamp(2rem,4vw,3.7rem);letter-spacing:-.04em;margin:10px 0}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.card{background:var(--paper);border:1px solid var(--line);border-radius:20px;padding:24px;min-height:180px}.card h3{margin-top:0;font-size:1.25rem}.card p{color:var(--muted);line-height:1.65}
+.band{margin:20px clamp(20px,7vw,110px);padding:44px;border-radius:28px;background:var(--ink);color:#fff}.band p{max-width:850px;color:#d9e2dd;line-height:1.7}.twoCol{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}.steps{margin:0;padding-left:22px;font-size:1.08rem;line-height:2}.callout{border-left:6px solid var(--gold);padding:18px 0 18px 28px;max-width:900px}.callout p{color:var(--muted);line-height:1.7;font-size:1.08rem}
+footer{display:flex;justify-content:space-between;gap:20px;padding:36px clamp(20px,7vw,110px);border-top:1px solid var(--line);color:var(--muted)}
+@media(max-width:860px){nav{display:none}.hero,.twoCol{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.hero h1{max-width:none}.statusCard{align-self:auto}.tagline{max-width:240px}footer{flex-direction:column}}
+</style>
+</head>
+<body>
+<main>
+<header class="topbar">
+<div class="brandText"><span class="eyebrow">COLUMBUS, OHIO PILOT</span><strong>PANTRYSTER</strong><span class="tagline">Tech That Feeds, Helping Hands and Uplifting Lives.</span></div>
+<nav><a href="#resources">Resources</a><a href="#help">Request Help</a><a href="#partners">Partners</a><a href="#volunteer">Volunteer</a><a href="../">IZZYAKOS</a></nav>
+</header>
+<section class="hero">
+<div><span class="eyebrow">Community resource infrastructure</span><h1>Find the help that is actually reachable.</h1><p class="lede">Pantryster is being built to coordinate food, shelter, transportation, volunteer support and community resources around the realities people face: distance, timing, mobility and changing availability.</p><div class="actions"><a class="primary" href="#resources">Find resources</a><a class="secondary" href="#help">Request help</a></div></div>
+<aside class="statusCard"><span>Production baseline 0.1</span><h2>Truth-first resource status</h2><p>A resource is not shown as “live” unless a verified source has updated it. Every operational status is designed to carry a timestamp and verification state.</p></aside>
+</section>
+<section id="resources" class="section"><div class="sectionHead"><span class="eyebrow">What Pantryster coordinates</span><h2>One access layer for fragmented community support.</h2></div>
+<div class="grid">
+<article class="card"><h3>Find Food</h3><p>Locate verified pantry resources near you and see when information was last updated.</p></article>
+<article class="card"><h3>Find Shelter</h3><p>See shelter and coordinated-access information without presenting stale data as live availability.</p></article>
+<article class="card"><h3>Transportation</h3><p>Surface COTA-accessible resources, transit assistance and delivery alternatives.</p></article>
+<article class="card"><h3>Senior Delivery</h3><p>Request support for seniors and people with mobility barriers.</p></article>
+<article class="card"><h3>Volunteer</h3><p>Match community volunteers to verified tasks by service area and capability.</p></article>
+<article class="card"><h3>Partners & Donors</h3><p>Give verified organizations and supporters a structured way to participate.</p></article>
+</div></section>
+<section class="band"><span class="eyebrow" style="color:#9fe0c3">2-mile local-first model</span><h2>Distance is part of eligibility in real life.</h2><p>The production data model supports latitude/longitude, service radius, transit-access flags, delivery options and verification timestamps so the platform can eventually answer “what can I actually reach from here?”</p></section>
+<section id="help" class="section twoCol"><div><span class="eyebrow">Assistance workflow</span><h2>From need to a verified next action.</h2></div><ol class="steps"><li>Identify the need and location.</li><li>Find verified nearby resources.</li><li>Check transportation or delivery barriers.</li><li>Route to partner, volunteer or follow-up support.</li><li>Track outcome without exposing sensitive requests publicly.</li></ol></section>
+<section id="partners" class="section"><div class="callout"><span class="eyebrow">Partner infrastructure</span><h2>Built for organizations to update their own operational truth.</h2><p>Pantries, shelters, churches, libraries, nonprofits and public-service partners will be able to claim verified profiles, update hours and availability, publish alerts and manage service details.</p></div></section>
+<section id="volunteer" class="section"><div class="grid"><article class="card"><h3>Volunteer</h3><p>Service area, availability, delivery capability and verification.</p></article><article class="card"><h3>Donate</h3><p>Food, transit assistance, technology, logistics and sponsor support.</p></article><article class="card"><h3>Partner</h3><p>Verified organization onboarding and controlled status updates.</p></article></div></section>
+<footer><strong>PANTRYSTER</strong><span>Columbus, Ohio pilot • IZZYAKOS LLC product pipeline</span></footer>
+</main></body></html>
