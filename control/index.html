@@ -23,6 +23,7 @@ body{min-height:100vh}.controlHeader{position:sticky;top:0;z-index:20;background
 
 <div class="tabs" role="tablist">
 <button class="tab active" data-tab="projects">Projects</button>
+<button class="tab" data-tab="departments">Departments</button>
 <button class="tab" data-tab="tasks">Kanban</button>
 <button class="tab" data-tab="milestones">Gantt / Milestones</button>
 <button class="tab" data-tab="talent">Talent</button>
@@ -33,12 +34,14 @@ body{min-height:100vh}.controlHeader{position:sticky;top:0;z-index:20;background
 <button class="tab" data-tab="relationships">CRM</button>
 <button class="tab" data-tab="reviews">Professional review</button>
 <button class="tab" data-tab="academy">Academy</button>
+<button class="tab" data-tab="budget">Use of funds</button>
 <button class="tab" data-tab="funding">Funding</button>
 <button class="tab" data-tab="email">Email registry</button>
 <button class="tab" data-tab="audit">Audit</button>
 </div>
 
 <section id="projects" class="panel active"><div id="projectGrid" class="projectGrid"></div></section>
+<section id="departments" class="panel"><div class="tableWrap"><table><thead><tr><th>Project</th><th>Department / workstream</th><th>Status</th><th>Next action</th><th>Blocker</th><th>Due</th></tr></thead><tbody id="departmentsBody"></tbody></table></div></section>
 <section id="tasks" class="panel"><div class="tableWrap"><table><thead><tr><th>Project</th><th>Workstream</th><th>Task</th><th>Stage</th><th>Priority</th><th>Start</th><th>Due</th><th>Progress</th><th>Evidence</th><th>Blocker</th></tr></thead><tbody id="tasksBody"></tbody></table></div></section>
 <section id="milestones" class="panel"><div class="tableWrap"><table><thead><tr><th>Project</th><th>Milestone</th><th>Target</th><th>Status</th><th>Success metric</th><th>Evidence</th></tr></thead><tbody id="milestonesBody"></tbody></table></div></section>
 <section id="talent" class="panel"><div class="tableWrap"><table><thead><tr><th>Project</th><th>Role</th><th>Why needed</th><th>Engagement</th><th>Priority</th><th>Capacity</th><th>Target</th><th>Funding dependency</th><th>Status</th></tr></thead><tbody id="talentBody"></tbody></table></div></section>
@@ -49,6 +52,7 @@ body{min-height:100vh}.controlHeader{position:sticky;top:0;z-index:20;background
 <section id="relationships" class="panel"><div class="tableWrap"><table><thead><tr><th>Project</th><th>Type</th><th>Person / organization</th><th>Stage</th><th>Purpose</th><th>Next action</th><th>Due</th></tr></thead><tbody id="relationshipsBody"></tbody></table></div></section>
 <section id="reviews" class="panel"><div class="tableWrap"><table><thead><tr><th>Project</th><th>Review</th><th>Topic</th><th>Reason</th><th>Status</th><th>Target</th><th>Evidence</th></tr></thead><tbody id="reviewsBody"></tbody></table></div></section>
 <section id="academy" class="panel"><div class="tableWrap"><table><thead><tr><th>#</th><th>Course</th><th>Required</th><th>Cadence</th><th>Passing rule</th><th>Status</th></tr></thead><tbody id="academyBody"></tbody></table></div></section>
+<section id="budget" class="panel"><div class="tableWrap"><table><thead><tr><th>Project</th><th>Category</th><th>Cost center</th><th>Evidence</th><th>Approved</th><th>Committed</th><th>Actual</th><th>Basis</th></tr></thead><tbody id="budgetBody"></tbody></table></div></section>
 <section id="funding" class="panel"><div class="tableWrap"><table><thead><tr><th>Project</th><th>Opportunity</th><th>Source</th><th>Stage</th><th>Eligibility</th><th>Verified</th></tr></thead><tbody id="fundingBody"></tbody></table></div></section>
 <section id="email" class="panel"><div class="tableWrap"><table><thead><tr><th>Address</th><th>Purpose</th><th>Type</th><th>Project</th><th>Status</th></tr></thead><tbody id="emailBody"></tbody></table></div></section>
 <section id="audit" class="panel"><div class="tableWrap"><table><thead><tr><th>Time</th><th>Action</th><th>Entity</th><th>Project</th><th>Source</th></tr></thead><tbody id="auditBody"></tbody></table></div></section>
@@ -74,17 +78,18 @@ async function load(){
  const {data:{session}}=await supabase.auth.getSession();
  if(!session){q("#authView").classList.remove("hidden");q("#dashboard").classList.add("hidden");q("#signOut").classList.add("hidden");return}
  q("#userLabel").textContent=session.user.email||"Authenticated user";
- const [projects,tasks,milestones,talent,capital,equipment,validation,journey,relationships,reviews,academy,funding,email,audit]=await Promise.all([
-  safeLoad("fm_company_projects","name"),safeLoad("fm_project_tasks","due_date"),safeLoad("fm_milestones","target_date"),
+ const [projects,departments,tasks,milestones,talent,capital,equipment,validation,journey,relationships,reviews,academy,budget,funding,email,audit]=await Promise.all([
+  safeLoad("fm_company_projects","name"),safeLoad("fm_company_workstreams","project_name"),safeLoad("fm_project_tasks","due_date"),safeLoad("fm_milestones","target_date"),
   safeLoad("fm_talent_needs","target_by"),safeLoad("fm_capital_needs","target_by"),safeLoad("fm_equipment_needs","project_name"),
   safeLoad("fm_validation_runs","test_date"),safeLoad("fm_journey_events","occurred_at"),safeLoad("fm_relationships","project_name"),
-  safeLoad("fm_professional_reviews","target_date"),safeLoad("fm_academy_courses","sequence_no"),safeLoad("fm_company_funding","project_name"),
+  safeLoad("fm_professional_reviews","target_date"),safeLoad("fm_academy_courses","sequence_no"),safeLoad("fm_company_budget","project_name"),safeLoad("fm_company_funding","project_name"),
   safeLoad("fm_company_email_registry","address"),safeLoad("fm_company_audit","created_at")
  ]);
  if(!projects.length){await supabase.auth.signOut();q("#dashboard").classList.add("hidden");q("#authView").classList.remove("hidden");setNotice("This identity is authenticated but is not authorized for IZZYAKOS Control.",true);return}
  q("#authView").classList.add("hidden");q("#dashboard").classList.remove("hidden");q("#signOut").classList.remove("hidden");
  q("#projectCount").textContent=projects.length;q("#taskCount").textContent=tasks.length;q("#talentCount").textContent=talent.length;q("#capitalCount").textContent=capital.length;q("#validationCount").textContent=validation.length;q("#academyCount").textContent=academy.length;
  q("#projectGrid").innerHTML=projects.map(p=>'<article class="projectCard"><small>'+esc(p.department||"Portfolio")+'</small><h3>'+esc(p.name)+'</h3><p>'+esc(p.product_type||"")+'</p><div class="projectMeta"><span>'+esc(p.lifecycle_stage||"")+'</span>'+state(p.status)+'</div></article>').join("");
+ q("#departmentsBody").innerHTML=departments.length?departments.map(r=>'<tr><td>'+esc(r.project_name)+'</td><td>'+esc(r.stream_type)+'</td><td>'+state(r.status)+'</td><td>'+esc(r.next_action||"—")+'</td><td>'+esc(r.blocker||"—")+'</td><td>'+dt(r.due_at)+'</td></tr>').join(""):emptyRow(6,"No visible departments/workstreams.");
  q("#tasksBody").innerHTML=tasks.length?tasks.map(r=>'<tr><td>'+esc(r.project_name)+'</td><td>'+esc(r.workstream)+'</td><td><strong>'+esc(r.title)+'</strong><br>'+esc(r.description||"")+'</td><td>'+state(r.stage)+'</td><td>'+esc(r.priority)+'</td><td>'+date(r.start_date)+'</td><td>'+date(r.due_date)+'</td><td>'+esc(r.progress_pct??0)+'%</td><td>'+state(r.evidence_state)+'</td><td>'+esc(r.blocker||"—")+'</td></tr>').join(""):emptyRow(10,"No visible tasks.");
  q("#milestonesBody").innerHTML=milestones.length?milestones.map(r=>'<tr><td>'+esc(r.project_name)+'</td><td><strong>'+esc(r.name)+'</strong><br>'+esc(r.description||"")+'</td><td>'+date(r.target_date)+'</td><td>'+state(r.status)+'</td><td>'+esc(r.success_metric||"—")+'</td><td>'+state(r.evidence_state)+'</td></tr>').join(""):emptyRow(6,"No visible milestones.");
  q("#talentBody").innerHTML=talent.length?talent.map(r=>'<tr><td>'+esc(r.project_name||"Company")+'</td><td><strong>'+esc(r.role_title)+'</strong></td><td>'+esc(r.reason)+'</td><td>'+esc(r.engagement_type||"—")+'</td><td>'+esc(r.priority||"—")+'</td><td>'+esc(r.capacity_need||"—")+'</td><td>'+date(r.target_by)+'</td><td>'+esc(r.funding_dependency||"—")+'</td><td>'+state(r.status)+'</td></tr>').join(""):emptyRow(9,"No visible talent requirements.");
@@ -95,6 +100,7 @@ async function load(){
  q("#relationshipsBody").innerHTML=relationships.length?relationships.map(r=>'<tr><td>'+esc(r.project_name||"Company")+'</td><td>'+esc(r.relationship_type)+'</td><td><strong>'+esc(r.organization_or_person)+'</strong></td><td>'+state(r.stage)+'</td><td>'+esc(r.purpose||"—")+'</td><td>'+esc(r.next_action||"—")+'</td><td>'+date(r.next_action_due)+'</td></tr>').join(""):emptyRow(7,"No CRM relationships persisted yet.");
  q("#reviewsBody").innerHTML=reviews.length?reviews.map(r=>'<tr><td>'+esc(r.project_name||"Company")+'</td><td>'+esc(r.review_type)+'</td><td><strong>'+esc(r.topic)+'</strong></td><td>'+esc(r.reason)+'</td><td>'+state(r.status)+'</td><td>'+date(r.target_date)+'</td><td>'+esc(r.evidence_ref||"—")+'</td></tr>').join(""):emptyRow(7,"No professional reviews visible.");
  q("#academyBody").innerHTML=academy.length?academy.map(r=>'<tr><td>'+esc(r.sequence_no)+'</td><td><strong>'+esc(r.title)+'</strong><br>'+esc(r.description||"")+'</td><td>'+yes(r.required)+'</td><td>'+esc(r.cadence||"—")+'</td><td>'+esc(r.passing_rule||"—")+'</td><td>'+state(r.status)+'</td></tr>').join(""):emptyRow(6,"No Academy courses visible.");
+ q("#budgetBody").innerHTML=budget.length?budget.map(r=>'<tr><td>'+esc(r.project_name)+'</td><td>'+esc(r.category)+'</td><td>'+esc(r.cost_center||"—")+'</td><td>'+state(r.evidence_state)+'</td><td>'+moneyRange(r.approved_amount,r.approved_amount)+'</td><td>'+moneyRange(r.committed_amount,r.committed_amount)+'</td><td>'+moneyRange(r.actual_amount,r.actual_amount)+'</td><td>'+esc(r.basis_notes||"—")+'</td></tr>').join(""):emptyRow(8,"No visible budget/use-of-funds lines.");
  q("#fundingBody").innerHTML=funding.length?funding.map(r=>'<tr><td>'+esc(r.project_name||"Company")+'</td><td>'+esc(r.title)+'</td><td>'+esc(r.source_name)+'</td><td>'+state(r.stage)+'</td><td>'+state(r.eligibility_state)+'</td><td>'+esc(r.verified_at?new Date(r.verified_at).toLocaleDateString():"Not verified")+'</td></tr>').join(""):emptyRow(6,"No verified funding opportunities have been persisted yet.");
  q("#emailBody").innerHTML=email.length?email.map(r=>'<tr><td><strong>'+esc(r.address)+'</strong></td><td>'+esc(r.purpose)+'</td><td>'+esc(r.mailbox_type)+'</td><td>'+esc(r.project_name||"Company")+'</td><td>'+state(r.provisioning_status)+'</td></tr>').join(""):emptyRow(5,"No email registry entries visible.");
  q("#auditBody").innerHTML=audit.length?audit.slice().reverse().map(r=>'<tr><td>'+dt(r.created_at)+'</td><td>'+esc(r.action)+'</td><td>'+esc(r.entity_type)+" / "+esc(r.entity_id)+'</td><td>'+esc(r.project_name||"Company")+'</td><td>'+esc(r.source)+'</td></tr>').join(""):emptyRow(5,"No audit events visible.");
