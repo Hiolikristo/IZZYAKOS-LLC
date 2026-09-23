@@ -13,25 +13,35 @@ HTML_FILES = [
     ROOT / "tracebridge" / "index.html",
     ROOT / "chopx" / "index.html",
     ROOT / "accra" / "index.html",
+    ROOT / "fundmeister" / "index.html",
+    ROOT / "control" / "index.html",
 ]
 
 CONTENT_CONTRACTS = {
     "index.html": [
-        "FastPath", "TRACEBridge", "CHOPX", "My Accra", "People", "Work", "Movement", "Commerce",
-        "Cohesion, not collection", "What the CTA does", "Current commercialization focus",
+        "BOAMAN", "TRACEBridge", "CHOPX", "My Accra", "Pantryster", "FUNDMEISTER",
+        "People", "Work", "Movement", "Commerce", "Stewardship",
+        "Truth before automation", "Reliable claims, explicit gates",
     ],
     "fastpath/index.html": [
-        "resume", "ATS Core V3", "pathway", "current jobs", "candidate packet", "local help",
-        "Supported", "Partial", "Unknown", "Gap", "voice", "industry-specific",
+        "FastPath is now BOAMAN", "workforce-intelligence", "Open BOAMAN",
     ],
     "tracebridge/index.html": [
-        "IFS Cloud", "Quality", "label", "physical verification", "Tool Crib", "SCAN OUT", "SCAN IN", "synthetic",
+        "IFS Cloud", "Quality", "label", "physical verification", "Tool Crib", "SCAN OUT", "SCAN IN", "receiving",
     ],
     "chopx/index.html": [
         "economic miles", "tip", "consent", "compliance", "field evidence", "Sprint 5E", "pre-production",
     ],
     "accra/index.html": [
-        "customer", "pickup", "inventory", "receiving", "aisle", "scan-pick", "owner", "payment",
+        "My Accra", "customer", "pickup", "inventory", "receiving", "aisle", "owner", "payment",
+    ],
+    "fundmeister/index.html": [
+        "Every material dollar should have provenance", "GranTIFY", "WECL", "Payroll",
+        "RBAC", "No credential vault", "IZZYAKOS is the first operating environment",
+    ],
+    "control/index.html": [
+        "Private company operations", "Truth boundary", "Projects", "Departments",
+        "Funding", "Use of funds", "Email registry", "Audit",
     ],
 }
 
