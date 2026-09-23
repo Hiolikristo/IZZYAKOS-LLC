@@ -24,8 +24,7 @@ CONTENT_CONTRACTS = {
         "Truth before automation", "Reliable claims, explicit gates",
     ],
     "fastpath/index.html": [
-        "resume", "ATS Core V3", "pathway", "current jobs", "candidate packet", "local help",
-        "Supported", "Partial", "Unknown", "Gap", "voice", "industry-specific",
+        "FastPath is now BOAMAN", "workforce-intelligence", "Open BOAMAN",
     ],
     "tracebridge/index.html": [
         "IFS Cloud", "Quality", "label", "physical verification", "Tool Crib", "SCAN OUT", "SCAN IN", "synthetic",
