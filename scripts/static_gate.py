@@ -27,13 +27,13 @@ CONTENT_CONTRACTS = {
         "FastPath is now BOAMAN", "workforce-intelligence", "Open BOAMAN",
     ],
     "tracebridge/index.html": [
-        "IFS Cloud", "Quality", "label", "physical verification", "Tool Crib", "SCAN OUT", "SCAN IN", "synthetic",
+        "IFS Cloud", "Quality", "label", "physical verification", "Tool Crib", "SCAN OUT", "SCAN IN", "receiving",
     ],
     "chopx/index.html": [
         "economic miles", "tip", "consent", "compliance", "field evidence", "Sprint 5E", "pre-production",
     ],
     "accra/index.html": [
-        "customer", "pickup", "inventory", "receiving", "aisle", "scan-pick", "owner", "payment",
+        "My Accra", "customer", "pickup", "inventory", "receiving", "aisle", "owner", "payment",
     ],
     "fundmeister/index.html": [
         "Every material dollar should have provenance", "GranTIFY", "WECL", "Payroll",
