@@ -1,31 +1,43 @@
 # FUNDMEISTER Financial Security Gate
 
-Status: BLOCKING for real bank/receipt/payroll data.
+Status: **GREEN for non-sensitive control-plane metadata and read-only management views. AMBER/BLOCKING for real bank transactions, receipt storage, payroll records and provider write integrations.**
 
-## Existing BOAMAN environment findings
+## What is live now
 
-The BOAMAN Supabase project is healthy and already uses RLS, but its current security advisor reports existing SECURITY DEFINER RPC exposure for authenticated users and leaked-password protection is disabled. Several of those RPCs perform internal/staff/pilot functions and rely on in-function authorization checks.
+- [x] Dedicated `fundmeister` schema/data plane created in the active BOAMAN Supabase project.
+- [x] No anonymous grants on FUNDMEISTER financial/control tables.
+- [x] Organization membership and finance-specific RBAC implemented.
+- [x] All FUNDMEISTER tables have RLS enabled.
+- [x] Browser-facing company management surfaces use read-only, `security_invoker` views.
+- [x] Authenticated browser writes to FUNDMEISTER tables are revoked.
+- [x] Founder/admin positive isolation test passed.
+- [x] Unrelated authenticated-user negative isolation test passed: zero IZZYAKOS projects visible.
+- [x] Immutable audit-event table created; ordinary authenticated clients have no write/delete access.
+- [x] Provider credentials/tokens are explicitly outside the financial tables.
+- [x] BOAMAN budget skeleton uses TBD/source-required amounts rather than fabricated values.
+- [x] Foreign-key indexes added after database-advisor review.
 
-That pattern may be acceptable only after explicit review for the existing workforce application. It is **not** sufficient evidence to introduce financial records.
+## Existing BOAMAN environment findings that remain outside the new FUNDMEISTER schema
 
-## Required GREEN conditions before financial activation
+The Supabase security advisor still reports existing public-schema `SECURITY DEFINER` RPCs callable by authenticated users and leaked-password protection is disabled. These pre-date the FUNDMEISTER control plane. They do not appear as new FUNDMEISTER findings, but they remain relevant before sensitive financial activation.
 
-- [ ] Review every SECURITY DEFINER RPC reachable by authenticated users.
-- [ ] Revoke EXECUTE where client access is not required.
-- [ ] Prefer SECURITY INVOKER when elevated privilege is not required.
-- [ ] For retained SECURITY DEFINER functions, verify explicit role check, fixed search_path, narrow return shape, and no user-controlled dynamic SQL.
-- [ ] Enable leaked-password protection or document an approved alternative auth posture.
-- [ ] Create a dedicated financial schema/data plane with no anon grants.
-- [ ] Implement organization/project memberships and finance-specific roles.
-- [ ] RLS negative tests: unrelated user, ordinary candidate, employer, partner, revoked staff.
-- [ ] RLS positive tests: founder/admin, finance, bookkeeper, accountant, scoped auditor.
-- [ ] Add immutable audit events for financial changes.
-- [ ] Define evidence-object storage policy and malware/content-type validation.
-- [ ] Define secret/token boundary for bank/payroll providers.
-- [ ] Define data-retention/deletion rules and backup/restore test.
+## Required GREEN conditions before sensitive financial activation
+
+- [ ] Review every existing public-schema `SECURITY DEFINER` RPC reachable by authenticated users.
+- [ ] Revoke `EXECUTE` where client access is not required.
+- [ ] Prefer `SECURITY INVOKER` when elevated privilege is not required.
+- [ ] For retained `SECURITY DEFINER` functions, verify explicit authorization, fixed `search_path`, narrow return shape and no user-controlled dynamic SQL.
+- [ ] Enable leaked-password protection or document an approved alternative authentication posture.
+- [ ] Define evidence-object storage policy, content-type validation and malware scanning.
+- [ ] Define the provider secret/token boundary for bank and payroll integrations.
+- [ ] Define data retention/deletion rules and execute a backup/restore test.
 - [ ] Threat-model CSV imports, duplicate transactions, transfer double counting, evidence tampering, IDOR, privilege escalation and exported-report leakage.
-- [ ] Complete human security review before production migration.
+- [ ] Add controlled server-side write APIs with separation-of-duties checks and audit events.
+- [ ] Run positive/negative tests for finance, project-manager, bookkeeper, accountant, auditor and funder-readonly roles.
+- [ ] Complete human security review before any live bank/payroll provider connection.
 
-## Pilot allowance
+## Allowed pilot data
 
-The current BOAMAN FUNDMEISTER pilot may display public-source opportunities, empty/TBD cost templates, readiness gaps and non-sensitive control-plane concepts. It must not store or expose real bank transactions, receipts, payroll, tax records or funding-source account details until this gate is GREEN.
+The IZZYAKOS/FUNDMEISTER control plane may persist company/project metadata, workstreams, planned corporate email identities, public-source funding opportunities, eligibility state, source-backed/TBD budget lines and audit metadata.
+
+It must **not** represent bank connections, transactions, receipts, payroll, tax records, grant awards or funder compliance as active unless those records and required controls actually exist.
