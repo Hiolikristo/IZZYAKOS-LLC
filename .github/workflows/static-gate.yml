@@ -19,5 +19,5 @@ jobs:
         uses: actions/checkout@v4
       - name: Validate sponsor surface
         run: python3 scripts/static_gate.py
-      - name: Validate FastPath reviewer demo
+      - name: Validate internal dashboard JavaScript\n        run: node scripts/check_inline_modules.mjs\n      - name: Validate FastPath reviewer demo
         run: python3 scripts/reviewer_demo_gate.py
