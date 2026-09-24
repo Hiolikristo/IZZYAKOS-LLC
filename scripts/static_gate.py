@@ -14,6 +14,8 @@ HTML_FILES = [
     ROOT / "chopx" / "index.html",
     ROOT / "accra" / "index.html",
     ROOT / "fundmeister" / "index.html",
+    ROOT / "fundmeister" / "workspace" / "index.html",
+    ROOT / "fundmeister.html",
     ROOT / "control" / "index.html",
 ]
 
@@ -36,12 +38,20 @@ CONTENT_CONTRACTS = {
         "My Accra", "customer", "pickup", "inventory", "receiving", "aisle", "owner", "payment",
     ],
     "fundmeister/index.html": [
-        "Every material dollar should have provenance", "GranTIFY", "WECL", "Payroll",
-        "RBAC", "No credential vault", "IZZYAKOS is the first operating environment",
+        "FUNDMEISTER does not require GranTIFY", "Journey/Event Ledger", "Talent Needs Engine",
+        "Investor/Funder Reporting", "FUNDMEISTER Academy", "IZZYAKOS is the first test case",
+    ],
+    "fundmeister/workspace/index.html": [
+        "Authorized project access", "Kanban", "Gantt", "Talent / Capital / Equipment",
+        "Pilot evidence", "Journey / CRM", "Academy", "Professional review",
+    ],
+    "fundmeister.html": [
+        "FUNDMEISTER does not require GranTIFY", "Journey/Event Ledger", "Talent Needs Engine",
+        "Investor/Funder Reporting", "FUNDMEISTER Academy", "IZZYAKOS is the first test case",
     ],
     "control/index.html": [
-        "Private company operations", "Truth boundary", "Projects", "Departments",
-        "Funding", "Use of funds", "Email registry", "Audit",
+        "Private company operations", "Truth boundary", "Portfolio", "Kanban", "Gantt",
+        "Talent", "Capital & Equipment", "Validation", "Funding & Budget", "Email Registry", "Audit",
     ],
 }
 
