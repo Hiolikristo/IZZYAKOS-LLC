@@ -1,0 +1,12 @@
+// Public radio player and proposal-only schedule. Do not advertise a live station without a valid upstream.
+(()=>{
+const conf=window.JERICHO_RADIO_CONFIG||{}, audio=document.getElementById('radioAudio'), status=document.getElementById('radioStatus'), play=document.getElementById('playDemo'), live=document.getElementById('tryLive'),title=document.getElementById('radioTrackTitle'), credit=document.getElementById('radioTrackCredit');
+const clean=s=>typeof s==='string'?s:''; const base=clean(conf.azuraCastBaseUrl).replace(/\/$/,'');
+const say=s=>{if(status) status.textContent=s};
+play?.addEventListener('click',async()=>{if(!audio)return;if(!audio.paused){audio.pause();return;}try{await audio.play()}catch(e){say('Audio playback was blocked by the browser; use the player controls above.')}});
+audio?.addEventListener('play',()=>{if(play)play.textContent='Ⅱ Pause'});audio?.addEventListener('pause',()=>{if(play)play.textContent='▶ Play sample'});
+const liveCheck=async()=>{if(!base){say('Radio demo mode: no real AzuraCast server has been configured. Live is not broadcasting yet.');return;}try{const r=await fetch(`${base}/api/nowplaying/${encodeURIComponent(conf.stationShortcode||'jericho_hour')}`,{cache:'no-store',mode:'cors'});if(!r.ok)throw Error('Stream status unavailable');const data=await r.json();const mount=data?.station?.listen_url||data?.station?.mounts?.[0]?.url;if(data?.is_online&&mount){audio.src=mount;title.textContent=data?.now_playing?.song?.title||'Jericho Hour Radio';credit.textContent=data?.now_playing?.song?.artist||'Live station feed';say(data?.live?.is_live?'Live presenter connected. Click play to listen.':'Station online with automated programming. Click play to listen.')}else say('The broadcast server is offline; the original demo track is still available.')}catch(e){say('Could not reach the configured station. Check HTTPS, API CORS and the station URL.')}};
+live?.addEventListener('click',liveCheck);
+fetch('./radio/programming.json').then(r=>r.json()).then(data=>{const grid=document.getElementById('stationDays');if(!grid)return;(data.shows||[]).forEach(s=>{const article=document.createElement('article');article.className='station-day';let day=document.createElement('span');day.className='day-name';day.textContent=s.day.toUpperCase();const name=document.createElement('strong');name.textContent=s.title;const when=document.createElement('small');when.textContent='Proposed · time TBD';article.append(day,name,when);grid.append(article)})}).catch(()=>{});
+if(base)liveCheck();
+})();
