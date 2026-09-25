@@ -1,0 +1,71 @@
+{
+  "timezone": "America/New_York",
+  "status": "proposal_only",
+  "approved": false,
+  "note": "No actual ministry service times confirmed. Use this data for meeting discussion only.",
+  "shows": [
+    {
+      "id": "proposal-1",
+      "day": "Monday",
+      "title": "Her Home, Her Voice",
+      "format": "Talk and family",
+      "time": "TBD",
+      "status": "proposed",
+      "approved": false
+    },
+    {
+      "id": "proposal-2",
+      "day": "Tuesday",
+      "title": "NextGen Broadcast Lab",
+      "format": "Supervised youth production",
+      "time": "TBD",
+      "status": "proposed",
+      "approved": false
+    },
+    {
+      "id": "proposal-3",
+      "day": "Wednesday",
+      "title": "Opportunity Hour",
+      "format": "Careers and community resources",
+      "time": "TBD",
+      "status": "proposed",
+      "approved": false
+    },
+    {
+      "id": "proposal-4",
+      "day": "Thursday",
+      "title": "Community Market Spotlight",
+      "format": "Business interviews",
+      "time": "TBD",
+      "status": "proposed",
+      "approved": false
+    },
+    {
+      "id": "proposal-5",
+      "day": "Friday",
+      "title": "Prayer, Worship & Testimony",
+      "format": "Ministry-hosted",
+      "time": "TBD",
+      "status": "proposed",
+      "approved": false
+    },
+    {
+      "id": "proposal-6",
+      "day": "Saturday",
+      "title": "Ghana Heritage Radio",
+      "format": "Culture and licensed music",
+      "time": "TBD",
+      "status": "proposed",
+      "approved": false
+    },
+    {
+      "id": "proposal-7",
+      "day": "Sunday",
+      "title": "Community Worship Replay",
+      "format": "Ministry-approved archive",
+      "time": "TBD",
+      "status": "proposed",
+      "approved": false
+    }
+  ]
+}
