@@ -1,0 +1,9 @@
+# Jericho Hour Ministry — September 26, 2026 owner meeting card
+
+**Demonstration:** listener homepage → radio player (original playable 38-second instrumental) → existing preacher video embed → seven proposed programs → studio exportable weekly draft → counseling page link → vetted community marketplace and resource hub.
+
+**45-minute discussion plan:** (1) Vision/mission and audience, 5 min; (2) owner/staff walkthrough of PWA, 10 min; (3) live ministry schedule, sermon masters, music rights and youth safeguarding, 10 min; (4) volunteer roles, booking coordinator and verified social accounts, 10 min; (5) ownership, staged pilot budget, success metrics and next approvals, 10 min.
+
+**Obtain at meeting:** ministry permission to implement a demonstration (no production DNS changes until approval), source-quality master logo, official social profile/channel URLs and WhatsApp invite, preferred names and roles of pastor and booking coordinator, existing Squarespace credentials through contributor access rather than sharing owner passwords, existing 2026 worship timetable with timezone, 1–3 original sermon audio masters and explicit redistribution approval, any artist/choir signed music releases, one willing adult test presenter, expected listener/concurrency and language priorities, minor-participant guardian approval policy, accessible contact/support mailbox.
+
+**Decision options:** A) inexpensive on-demand PWA/official YouTube and no live station; B) radio pilot with licensed-only AutoDJ and 1–2 weekly live presenters; C) full community radio + media school + approved marketplace. Approve the smallest useful release before adding unneeded paid services.
