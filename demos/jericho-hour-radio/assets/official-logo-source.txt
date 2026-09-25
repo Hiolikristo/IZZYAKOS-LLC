@@ -1,0 +1,4 @@
+Official original logo source found publicly on Jericho Hour Prayer Ministry's website:
+https://images.squarespace-cdn.com/content/v1/6828e5462a550b3f49e5f6ae/4b2d9614-2320-4ca6-94d3-abf3ebce8719/THANK_YOU__POSTCARD_-_ENCOUNTER__1_-removebg-preview.png
+
+A local download could not be completed because the asset host was inaccessible from the build environment. This starter package includes a clearly provisional app icon, NOT a copy of the official logo. Obtain the owner's original high-resolution transparent PNG/SVG, permission and brand usage preferences before publication. Do not treat the URL above as a stable production asset; import the authorized master image into /assets/.
