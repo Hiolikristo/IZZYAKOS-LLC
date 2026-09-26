@@ -3,8 +3,8 @@
 Date: 2026-09-26 | Technical status: locally tested; **not deployed to the ministry's public website, no social streaming accounts connected**.
 
 ## Deliverable archives
-- `Jericho-Hour-Multistream-Live-Demo-Upload.zip` — 36-file static Netlify upload, 183,541 bytes, SHA256 `399b761fe3d19d8f424bba2d230e5c9a860142b029e2e9a7895bbcee84f05c28`. Root `index.html` and new interactive `multistream.html`, `multistream.css`, `multistream.js`. Contains no private consultation notes or real stream credentials.
-- `Jericho-Hour-BroadcastKit-v4-Full-Source.zip` — 64-file source package, 345,760 bytes, SHA256 `a0ca174a0ee427ff834c30c9117720f632ea6432ed1c5bb6537a4570d6f194cc`. Distributed privately to owner in the originating ChatGPT conversation; includes dry-run FFmpeg engine and local tests. These archives have **not** been synchronized as individual GitHub source files on this branch by this manifest commit.
+- `Jericho-Hour-Multistream-Live-Demo-Upload.zip` — 36-file static Netlify upload, 183,562 bytes, SHA256 `6d0feeb20ea61c6545ccc9e1d9f1b6aff250488536be67401aecb8bae73cb4c2`. Root `index.html` and new interactive `multistream.html`, `multistream.css`, `multistream.js`. Contains no private consultation notes or real stream credentials.
+- `Jericho-Hour-BroadcastKit-v4-Full-Source.zip` — 64-file source package, 345,781 bytes, SHA256 `e6c8932d92efad4cebdbbc3be0927ae3bea0569d13a9c9b15f266674d00397c9`. Distributed privately to owner in the originating ChatGPT conversation; includes dry-run FFmpeg engine and local tests. These archives have **not** been synchronized as individual GitHub source files on this branch by this manifest commit.
 - Two-sink offline proof: one synthetic H.264/AAC input was single-encoded via FFmpeg tee into two 2.023-second FLV outputs (~90,808 bytes each). **No actual external platform connection**.
 
 ## QA
