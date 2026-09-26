@@ -1,0 +1,13 @@
+{
+  "name": "jericho-hour-owner-review-demo",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node demo-server.mjs"
+  },
+  "description": "Owner-review public showcase only. No actual radio, payments, bank connections or SMS."
+}
