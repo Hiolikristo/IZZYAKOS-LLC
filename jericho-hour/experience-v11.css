@@ -1,0 +1,16 @@
+
+.jh-expbar{position:fixed;right:12px;bottom:12px;z-index:9999;display:flex;gap:7px;align-items:center;flex-wrap:wrap;max-width:min(92vw,560px);padding:9px;background:#fffaf4f2;border:1px solid #d8c1b7;border-radius:12px;box-shadow:0 10px 30px #250d192c;backdrop-filter:blur(10px)}
+.jh-expbar select,.jh-expbar button,.jh-expbar a{border:1px solid #bfa9a6;border-radius:8px;background:#fffaf4;color:#3f2032;padding:8px 10px;font:750 11px/1.2 system-ui;text-decoration:none;min-height:37px}.jh-expbar button{cursor:pointer}
+html[data-jh-theme="espresso"] body{background:#21141a!important;color:#fff6ee!important}
+html[data-jh-theme="espresso"] .head,html[data-jh-theme="espresso"] header.head,html[data-jh-theme="espresso"] .nav,html[data-jh-theme="espresso"] .mobile-nav menu{background:#2a1821!important;color:#fff6ee!important}
+html[data-jh-theme="espresso"] .head a,html[data-jh-theme="espresso"] .nav a{color:#fff6ee!important}
+html[data-jh-theme="espresso"] .hero{background:radial-gradient(circle at 20% 90%,#62452a,#2d1922 55%,#21131a)!important}
+html[data-jh-theme="espresso"] .card,html[data-jh-theme="espresso"] .q,html[data-jh-theme="espresso"] .banner,html[data-jh-theme="espresso"] .cal-shell{background:#fff8ef!important;color:#2f2028!important}
+html[data-jh-theme="espresso"] .section:not(.dark) p{color:#e1cfd8}
+@media(max-width:600px){
+  .head .seal{width:186px!important;height:64px!important;overflow:visible!important}
+  .head .seal img{height:64px!important;width:186px!important;max-width:186px!important;object-fit:contain!important;object-position:left center!important}
+  .head .brand>span:last-child{display:none!important}
+  .head .inner{min-height:82px!important}
+  .jh-expbar{left:8px;right:8px;bottom:8px;justify-content:center}
+}
