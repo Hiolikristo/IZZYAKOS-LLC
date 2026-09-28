@@ -1,5 +1,5 @@
 (()=>{'use strict';
-const langs=[
+const langs=[['ga','Ga'],['rw','Kinyarwanda'],['om','Afaan Oromo'],['ti','ትግርኛ / Tigrinya'],['ln','Lingála'],['wo','Wolof'],['sn','Shona'],['st','Sesotho'],['tn','Setswana'],
 ['en','English'],['fr','Français'],['es','Español'],['pt','Português'],['ar','العربية'],['ak','Twi / Akan'],['ee','Ewe'],['ha','Hausa'],['yo','Yorùbá'],['ig','Igbo'],['sw','Kiswahili'],['am','Amharic'],['so','Somali'],['zu','isiZulu'],['xh','isiXhosa'],['af','Afrikaans']
 ];
 const words={
@@ -26,8 +26,29 @@ function translateNav(code){
  const full=document.getElementById('jhFullTranslate');if(full){if(code==='en'){full.hidden=true}else{full.hidden=false;const u=new URL('https://translate.google.com/translate');u.searchParams.set('sl','auto');u.searchParams.set('tl',code);u.searchParams.set('u',location.href);full.href=u.toString();}}
  try{localStorage.setItem('jh-lang-v11',code)}catch{}
 }
-function theme(t){document.documentElement.dataset.jhTheme=t;document.documentElement.dataset.theme=t==='espresso'?'espresso':'cream';try{localStorage.setItem('jh-theme-v11',t)}catch{};const b=document.getElementById('jhTheme');if(b)b.textContent=t==='espresso'?'☀ Cream':'◐ Brown'}
-function mount(){
+function theme(t){t=t==='cream'?'cream':'heritage';document.documentElement.dataset.jhTheme=t;document.documentElement.dataset.theme=t==='heritage'?'espresso':'cream';try{localStorage.setItem('jh-theme-v11',t)}catch{};const b=document.getElementById('jhTheme');if(b)b.textContent=t==='heritage'?'☀ Cream':'◐ Brown'}
+function integrateOriginalNav(){
+ const desktop=document.querySelector('.head .links');
+ if(desktop){
+   const current=location.pathname.split('/').pop()||'index.html';
+   const nav=[
+    ['./','Home',false],
+    ['https://www.jerichohourprayerministry.com/meet-our-leaders','Meet Our Leaders',true],
+    ['programs.html','Events',false],
+    ['radio.html','Radio',false],
+    ['schedule.html','Schedule',false],
+    ['booking.html','Counseling',false],
+    ['community.html','Outreach',false]
+   ];
+   desktop.replaceChildren(...nav.map(([href,label,external])=>{const a=document.createElement('a');a.href=href;a.textContent=label;if(external){a.target='_blank';a.rel='noopener'}const base=href.replace('./','index.html');if(!external&&((current==='index.html'&&href==='./')||current===base))a.setAttribute('aria-current','page');return a}));
+ }
+ const menu=document.querySelector('.mobile-nav menu');
+ if(menu){
+   const nav=[['./','Home'],['https://www.jerichohourprayerministry.com/meet-our-leaders','Meet Our Leaders'],['programs.html','Events'],['radio.html','Radio'],['sermons.html','Sermons'],['schedule.html','Schedule'],['booking.html','Counseling'],['community.html','Outreach'],['resources.html','Resources'],['orphanage.html','Ghana Care'],['member.html','Member access']];
+   menu.replaceChildren(...nav.map(([href,label])=>{const li=document.createElement('li'),a=document.createElement('a');a.href=href;a.textContent=label;if(href.startsWith('https:')){a.target='_blank';a.rel='noopener'}li.append(a);return li}));
+ }
+}
+function mount(){integrateOriginalNav();
  let select=document.getElementById('jhLang'), toggle=document.getElementById('jhTheme'), full=document.getElementById('jhFullTranslate');
  if(!select||!toggle){
    const bar=document.createElement('div');bar.className='jh-expbar';bar.setAttribute('aria-label','Display preferences');
@@ -35,8 +56,8 @@ function mount(){
    if(!toggle){toggle=document.createElement('button');toggle.type='button';toggle.id='jhTheme';bar.append(toggle)}
    full=document.createElement('a');full.id='jhFullTranslate';full.target='_blank';full.rel='noopener';full.textContent='Full page ↗';bar.append(full);document.body.append(bar);
  }else if(!full){full=document.createElement('a');full.id='jhFullTranslate';full.target='_blank';full.rel='noopener';full.textContent='Full page ↗';select.parentElement?.append(full)}
- const savedTheme=(()=>{try{return localStorage.getItem('jh-theme-v11')}catch{return null}})()||'cream';theme(savedTheme);
- toggle.onclick=()=>theme(document.documentElement.dataset.jhTheme==='espresso'?'cream':'espresso');
+ const savedTheme=(()=>{try{return localStorage.getItem('jh-theme-v11')}catch{return null}})()||'heritage';theme(savedTheme);
+ toggle.onclick=()=>theme(document.documentElement.dataset.jhTheme==='heritage'?'cream':'heritage');
  const savedLang=(()=>{try{return localStorage.getItem('jh-lang-v11')}catch{return null}})()||'en';if([...select.options].some(o=>o.value===savedLang))select.value=savedLang;translateNav(select.value);select.onchange=()=>translateNav(select.value);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();

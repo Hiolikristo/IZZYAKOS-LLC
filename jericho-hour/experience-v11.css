@@ -14,3 +14,79 @@ html[data-jh-theme="espresso"] .section:not(.dark) p{color:#e1cfd8}
   .head .inner{min-height:82px!important}
   .jh-expbar{left:8px;right:8px;bottom:8px;justify-content:center}
 }
+
+/* V12 heritage integration: preserve the ministry's original dark burgundy identity
+   while retaining the enhanced responsive member platform. Cream remains selectable. */
+html:not([data-jh-theme]),html[data-jh-theme="heritage"]{background:#25131e}
+html:not([data-jh-theme]) body,html[data-jh-theme="heritage"] body{background:#fffaf4;color:#322331}
+html:not([data-jh-theme]) .head,html[data-jh-theme="heritage"] .head{
+  background:linear-gradient(90deg,#25131e,#3b1b30 55%,#2b1424)!important;
+  color:#fff7ee!important;border-bottom:4px solid #d8a255!important;
+}
+html:not([data-jh-theme]) .head .inner,html[data-jh-theme="heritage"] .head .inner{min-height:94px!important}
+html:not([data-jh-theme]) .head .brand,html[data-jh-theme="heritage"] .head .brand,
+html:not([data-jh-theme]) .head .links a,html[data-jh-theme="heritage"] .head .links a{color:#fff7ee!important}
+html:not([data-jh-theme]) .head .brand>span:last-child,html[data-jh-theme="heritage"] .head .brand>span:last-child{display:none!important}
+html:not([data-jh-theme]) .head .seal,html[data-jh-theme="heritage"] .head .seal{width:280px!important;height:82px!important;overflow:visible!important}
+html:not([data-jh-theme]) .head .seal img,html[data-jh-theme="heritage"] .head .seal img{width:280px!important;height:82px!important;max-width:280px!important;object-fit:contain!important;object-position:left center!important}
+html:not([data-jh-theme]) .head .links,html[data-jh-theme="heritage"] .head .links{gap:15px!important;font-size:11px!important}
+html:not([data-jh-theme]) .head .links a,html[data-jh-theme="heritage"] .head .links a{padding:34px 0 30px;border-bottom:3px solid transparent}
+html:not([data-jh-theme]) .head .links a:hover,html[data-jh-theme="heritage"] .head .links a:hover,
+html:not([data-jh-theme]) .head .links a[aria-current],html[data-jh-theme="heritage"] .head .links a[aria-current]{color:#f3c87f!important;border-bottom-color:#f3c87f}
+html:not([data-jh-theme]) .head .btn.light,html[data-jh-theme="heritage"] .head .btn.light{border-color:#e8c89b!important;color:#fff!important;background:#ffffff0d!important}
+html:not([data-jh-theme]) .head .btn:not(.light),html[data-jh-theme="heritage"] .head .btn:not(.light){background:#e3b462!important;border-color:#e3b462!important;color:#2c1523!important}
+html:not([data-jh-theme]) .mobile-nav summary,html[data-jh-theme="heritage"] .mobile-nav summary{border-color:#e8c89b;color:#fff;background:#ffffff12}
+html:not([data-jh-theme]) .mobile-nav menu,html[data-jh-theme="heritage"] .mobile-nav menu{background:#2b1624!important;border-color:#6c4b5c!important}
+html:not([data-jh-theme]) .mobile-nav menu a,html[data-jh-theme="heritage"] .mobile-nav menu a{color:#fff7ee!important}
+html:not([data-jh-theme]) .hero,html[data-jh-theme="heritage"] .hero{
+  background:
+   radial-gradient(circle at 50% 25%,#6f3b53 0,#46243a 35%,#2d1727 72%,#25131e 100%)!important;
+  color:#fff!important;padding:92px 0 108px!important;position:relative;overflow:hidden;
+}
+html:not([data-jh-theme]) .hero:after,html[data-jh-theme="heritage"] .hero:after{
+  content:"";position:absolute;inset:0;pointer-events:none;opacity:.18;
+  background:radial-gradient(circle at 50% 50%,transparent 0 32%,#000 74%),linear-gradient(120deg,transparent 20%,#d6a35333 50%,transparent 80%);
+}
+html:not([data-jh-theme]) .hero .hero-grid,html[data-jh-theme="heritage"] .hero .hero-grid{grid-template-columns:1fr!important;text-align:center;max-width:980px;position:relative;z-index:1}
+html:not([data-jh-theme]) .hero .hero-grid>div:first-child,html[data-jh-theme="heritage"] .hero .hero-grid>div:first-child{max-width:900px;margin:auto}
+html:not([data-jh-theme]) .hero .hero-card,html[data-jh-theme="heritage"] .hero .hero-card{display:none!important}
+html:not([data-jh-theme]) .hero .kicker,html[data-jh-theme="heritage"] .hero .kicker{color:#f0ca88!important}
+html:not([data-jh-theme]) .hero h1,html[data-jh-theme="heritage"] .hero h1{font-family:system-ui,-apple-system,"Segoe UI",sans-serif!important;font-size:clamp(44px,7vw,82px)!important;line-height:.98!important;letter-spacing:-.035em!important;text-transform:uppercase;font-weight:900!important;margin:20px auto!important;max-width:900px}
+html:not([data-jh-theme]) .hero h1 em,html[data-jh-theme="heritage"] .hero h1 em{font-style:normal!important;color:#fff!important;font-weight:900!important}
+html:not([data-jh-theme]) .hero .lead,html[data-jh-theme="heritage"] .hero .lead{color:#f5e9ef!important;max-width:780px;margin:0 auto;font-size:18px!important}
+html:not([data-jh-theme]) .hero .actions,html[data-jh-theme="heritage"] .hero .actions{justify-content:center}
+html:not([data-jh-theme]) .hero .btn.gold,html[data-jh-theme="heritage"] .hero .btn.gold{background:#fff!important;color:#351a2a!important;border-color:#fff!important}
+html:not([data-jh-theme]) .hero .btn.light,html[data-jh-theme="heritage"] .hero .btn.light{color:#fff!important;border-color:#e8c89b!important;background:#ffffff0d!important}
+html:not([data-jh-theme]) .hero p[style],html[data-jh-theme="heritage"] .hero p[style]{color:#efcca1!important}
+html:not([data-jh-theme]) .quick,html[data-jh-theme="heritage"] .quick{margin-top:-42px!important;z-index:3}
+html:not([data-jh-theme]) .q,html[data-jh-theme="heritage"] .q{box-shadow:0 12px 34px #331a201c}
+html[data-jh-theme="cream"] .head{background:#fffaf4!important;color:#322331!important;border-bottom:1px solid #eadccc!important}
+html[data-jh-theme="cream"] .head .brand,html[data-jh-theme="cream"] .head .links a{color:#322331!important}
+html[data-jh-theme="cream"] .head .brand>span:last-child{display:inline!important}
+html[data-jh-theme="cream"] .head .seal{width:260px!important;height:78px!important}
+html[data-jh-theme="cream"] .head .seal img{width:auto!important;height:78px!important;max-width:100%!important}
+html[data-jh-theme="cream"] .head .links a{padding:0;border:0}
+html[data-jh-theme="cream"] .hero{background:radial-gradient(circle at 22% 94%,#f9e5c4,transparent 43%),#fffaf4!important;color:#322331!important;padding:68px 0 100px!important}
+html[data-jh-theme="cream"] .hero:after{display:none}
+html[data-jh-theme="cream"] .hero .hero-grid{grid-template-columns:1.1fr .9fr!important;text-align:left!important;max-width:1150px}
+html[data-jh-theme="cream"] .hero .hero-card{display:block!important}
+html[data-jh-theme="cream"] .hero h1{font-family:Georgia,serif!important;font-size:clamp(39px,5.6vw,73px)!important;line-height:1.1!important;text-transform:none!important;font-weight:650!important;margin:18px 0!important}
+html[data-jh-theme="cream"] .hero h1 em{font-style:italic!important;color:#a05552!important;font-weight:400!important}
+html[data-jh-theme="cream"] .hero .lead{color:#655962!important;margin:0;max-width:600px}
+html[data-jh-theme="cream"] .hero .actions{justify-content:flex-start}
+@media(max-width:1080px){
+ html:not([data-jh-theme]) .head .seal,html[data-jh-theme="heritage"] .head .seal{width:220px!important}
+ html:not([data-jh-theme]) .head .seal img,html[data-jh-theme="heritage"] .head .seal img{width:220px!important;max-width:220px!important}
+ html:not([data-jh-theme]) .head .links,html[data-jh-theme="heritage"] .head .links{gap:10px!important;font-size:10px!important}
+}
+@media(max-width:850px){
+ html:not([data-jh-theme]) .head .seal,html[data-jh-theme="heritage"] .head .seal{width:215px!important;height:68px!important}
+ html:not([data-jh-theme]) .head .seal img,html[data-jh-theme="heritage"] .head .seal img{width:215px!important;height:68px!important;max-width:215px!important}
+ html:not([data-jh-theme]) .hero,html[data-jh-theme="heritage"] .hero{padding:62px 0 88px!important}
+}
+@media(max-width:530px){
+ html:not([data-jh-theme]) .head .seal,html[data-jh-theme="heritage"] .head .seal{width:190px!important;height:62px!important}
+ html:not([data-jh-theme]) .head .seal img,html[data-jh-theme="heritage"] .head .seal img{width:190px!important;height:62px!important;max-width:190px!important}
+ html:not([data-jh-theme]) .hero h1,html[data-jh-theme="heritage"] .hero h1{font-size:clamp(38px,12vw,56px)!important}
+ html:not([data-jh-theme]) .hero .lead,html[data-jh-theme="heritage"] .hero .lead{font-size:16px!important}
+}
