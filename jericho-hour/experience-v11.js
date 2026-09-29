@@ -1,64 +1,24 @@
 (()=>{'use strict';
-const langs=[['ga','Ga'],['rw','Kinyarwanda'],['om','Afaan Oromo'],['ti','ትግርኛ / Tigrinya'],['ln','Lingála'],['wo','Wolof'],['sn','Shona'],['st','Sesotho'],['tn','Setswana'],
-['en','English'],['fr','Français'],['es','Español'],['pt','Português'],['ar','العربية'],['ak','Twi / Akan'],['ee','Ewe'],['ha','Hausa'],['yo','Yorùbá'],['ig','Igbo'],['sw','Kiswahili'],['am','Amharic'],['so','Somali'],['zu','isiZulu'],['xh','isiXhosa'],['af','Afrikaans']
-];
-const words={
-fr:{Home:'Accueil',Radio:'Radio',Sermons:'Sermons',Programs:'Programmes',Schedule:'Calendrier',Community:'Communauté','Ghana Care':'Projet Ghana','Member sign in':'Espace membre','Give & support':'Donner'},
-es:{Home:'Inicio',Radio:'Radio',Sermons:'Sermones',Programs:'Programas',Schedule:'Horario',Community:'Comunidad','Ghana Care':'Proyecto Ghana','Member sign in':'Miembros','Give & support':'Donar'},
-pt:{Home:'Início',Radio:'Rádio',Sermons:'Sermões',Programs:'Programas',Schedule:'Agenda',Community:'Comunidade','Ghana Care':'Projeto Gana','Member sign in':'Membros','Give & support':'Doar'},
-ar:{Home:'الرئيسية',Radio:'الإذاعة',Sermons:'العظات',Programs:'البرامج',Schedule:'الجدول',Community:'المجتمع','Ghana Care':'مشروع غانا','Member sign in':'دخول الأعضاء','Give & support':'تبرع'},
-ak:{Home:'Fie',Radio:'Radio',Sermons:'Asɛnka',Programs:'Nhyehyɛe',Schedule:'Berɛ nhyehyɛe',Community:'Mpɔtam','Ghana Care':'Ghana mmoa'},
-ee:{Home:'Aƒe',Radio:'Radio',Sermons:'Nyagbɔgblɔ',Programs:'Dɔwɔwɔwo',Schedule:'Ɣeyiɣiwo',Community:'Hame','Ghana Care':'Ghana kpekpeɖeŋu'},
-ha:{Home:'Gida',Radio:'Rediyo',Sermons:'Wa’azi',Programs:'Shirye-shirye',Schedule:'Jadawali',Community:'Al’umma','Ghana Care':'Aikin Ghana'},
-yo:{Home:'Ilé',Radio:'Redio',Sermons:'Ìwàásù',Programs:'Àwọn ètò',Schedule:'Àkókò',Community:'Àwùjọ','Ghana Care':'Ìtọ́jú Ghana'},
-ig:{Home:'Ụlọ',Radio:'Redio',Sermons:'Okwuchukwu',Programs:'Mmemme',Schedule:'Nhazi oge',Community:'Obodo','Ghana Care':'Nlekọta Ghana'},
-sw:{Home:'Nyumbani',Radio:'Redio',Sermons:'Mahubiri',Programs:'Vipindi',Schedule:'Ratiba',Community:'Jamii','Ghana Care':'Mradi wa Ghana','Member sign in':'Wanachama','Give & support':'Toa'},
-am:{Home:'መነሻ',Radio:'ሬዲዮ',Sermons:'ስብከቶች',Programs:'ፕሮግራሞች',Schedule:'መርሐ ግብር',Community:'ማህበረሰብ','Ghana Care':'የጋና ፕሮጀክት'},
-so:{Home:'Hoyga',Radio:'Raadiyo',Sermons:'Khudbado',Programs:'Barnaamijyo',Schedule:'Jadwal',Community:'Bulsho','Ghana Care':'Mashruuca Ghana'},
-zu:{Home:'Ikhaya',Radio:'Umsakazo',Sermons:'Izintshumayelo',Programs:'Izinhlelo',Schedule:'Uhlelo',Community:'Umphakathi','Ghana Care':'Iphrojekthi yaseGhana'},
-xh:{Home:'Ikhaya',Radio:'Irediyo',Sermons:'Iintshumayelo',Programs:'Iinkqubo',Schedule:'Ishedyuli',Community:'Uluntu','Ghana Care':'Iprojekthi yaseGhana'},
-af:{Home:'Tuis',Radio:'Radio',Sermons:'Preke',Programs:'Programme',Schedule:'Skedule',Community:'Gemeenskap','Ghana Care':'Ghana-projek'}
-};
-const rtl=new Set(['ar']);
-function translateNav(code){
- document.documentElement.lang=code;document.documentElement.dir=rtl.has(code)?'rtl':'ltr';
- document.querySelectorAll('a,button,summary').forEach(el=>{const raw=el.dataset.jhOriginal||el.textContent.trim();if(!el.dataset.jhOriginal)el.dataset.jhOriginal=raw;const m=words[code];el.textContent=(m&&m[raw])||raw});
- const full=document.getElementById('jhFullTranslate');if(full){if(code==='en'){full.hidden=true}else{full.hidden=false;const u=new URL('https://translate.google.com/translate');u.searchParams.set('sl','auto');u.searchParams.set('tl',code);u.searchParams.set('u',location.href);full.href=u.toString();}}
- try{localStorage.setItem('jh-lang-v11',code)}catch{}
+const ROOT='/jericho-hour/';
+const LANGS=[['en','English'],['fr','Français'],['es','Español'],['pt','Português'],['ar','العربية'],['ak','Twi / Akan'],['ee','Ewe'],['ga','Ga'],['ha','Hausa'],['yo','Yorùbá'],['ig','Igbo'],['sw','Kiswahili'],['am','Amharic'],['so','Somali'],['om','Afaan Oromo'],['ti','Tigrinya'],['rw','Kinyarwanda'],['ln','Lingála'],['wo','Wolof'],['zu','isiZulu'],['xh','isiXhosa'],['af','Afrikaans'],['sn','Shona'],['st','Sesotho'],['tn','Setswana']];
+const WORDS={fr:{Home:'Accueil',Radio:'Radio',Sermons:'Sermons',Programs:'Programmes',Schedule:'Calendrier',Community:'Communauté',Feed:'Fil','Member sign in':'Espace membre','Give & support':'Donner'},es:{Home:'Inicio',Radio:'Radio',Sermons:'Sermones',Programs:'Programas',Schedule:'Calendario',Community:'Comunidad',Feed:'Actividad','Member sign in':'Miembros','Give & support':'Donar'},pt:{Home:'Início',Radio:'Rádio',Sermons:'Sermões',Programs:'Programas',Schedule:'Agenda',Community:'Comunidade',Feed:'Feed','Member sign in':'Membros','Give & support':'Doar'},ar:{Home:'الرئيسية',Radio:'الراديو',Sermons:'العظات',Programs:'البرامج',Schedule:'الجدول',Community:'المجتمع',Feed:'المنشورات','Member sign in':'دخول الأعضاء','Give & support':'العطاء'}};
+const PREF='jh-pref-v12';let pref={theme:'cream',lang:'en',dataMode:'low'};try{Object.assign(pref,JSON.parse(localStorage.getItem(PREF)||'{}'))}catch{}
+let dock,playBtn,modeSel,themeSel,langSel,toast,ctx,nodes=[],timer=null,playing=false,startedAt=0,elapsed=0;
+function persist(){try{localStorage.setItem(PREF,JSON.stringify(pref))}catch{}}
+function flash(msg){if(!toast)return;toast.textContent=msg;toast.classList.add('show');clearTimeout(flash.t);flash.t=setTimeout(()=>toast.classList.remove('show'),3000)}
+function stopSynth(){nodes.forEach(n=>{try{n.stop?.()}catch{};try{n.disconnect?.()}catch{}});nodes=[];clearInterval(timer);timer=null;if(ctx){ctx.close().catch(()=>{});ctx=null}if(playing)elapsed+=(performance.now()-startedAt)/1000;playing=false;if(playBtn)playBtn.textContent='▶'}
+async function playSynth(){if(playing)return;try{ctx=new(window.AudioContext||window.webkitAudioContext)();await ctx.resume();playing=true;startedAt=performance.now();playBtn.textContent='Ⅱ';const master=ctx.createGain();master.gain.value=.18;master.connect(ctx.destination);nodes.push(master);const progression=[[261.63,329.63,392],[196,246.94,392],[220,261.63,329.63],[174.61,220,261.63]];const schedule=()=>{if(!ctx||ctx.state==='closed')return;const now=ctx.currentTime,bar=Math.floor((elapsed+(performance.now()-startedAt)/1000)/4)%4;progression[bar].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type=i===0?'triangle':'sine';o.frequency.value=f;g.gain.setValueAtTime(0,now);g.gain.linearRampToValueAtTime(i===0?.11:.07,now+.25);g.gain.setValueAtTime(i===0?.11:.07,now+3.4);g.gain.linearRampToValueAtTime(0,now+3.95);o.connect(g);g.connect(master);o.start(now);o.stop(now+4);nodes.push(o,g)});const bell=ctx.createOscillator(),bg=ctx.createGain();bell.type='sine';bell.frequency.value=[392,440,523.25,587.33][bar];bg.gain.setValueAtTime(0,now+.65);bg.gain.linearRampToValueAtTime(.05,now+.72);bg.gain.exponentialRampToValueAtTime(.001,now+1.65);bell.connect(bg);bg.connect(master);bell.start(now+.65);bell.stop(now+1.7);nodes.push(bell,bg)};schedule();timer=setInterval(schedule,4000);flash('Playing original demo bed. The real 24/7 stream is not commissioned yet.')}catch(e){stopSynth();flash('This browser blocked audio. Tap Play again after interacting with the page.') }}
+function setTheme(v){pref.theme=v;document.documentElement.dataset.jhTheme=v;persist();if(themeSel)themeSel.value=v}
+function translateNav(lang){pref.lang=lang;document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';persist();const dict=WORDS[lang]||{};document.querySelectorAll('a,button').forEach(el=>{const raw=el.dataset.jhBase||(el.dataset.jhBase=el.textContent.trim());if(dict[raw])el.textContent=dict[raw]});if(lang!=='en'&&!WORDS[lang])flash('Language saved. Full-page translation will use the ministry self-hosted translation service when connected.');if(langSel)langSel.value=lang}
+function mountDock(){if(document.querySelector('.jh-radio-dock'))return;dock=document.createElement('aside');dock.className='jh-radio-dock';dock.setAttribute('aria-label','Jericho Hour persistent radio player');dock.innerHTML=`<div class="jh-radio-inner"><button class="jh-radio-play" type="button" aria-label="Play radio demo">▶</button><div class="jh-radio-meta"><b>Jericho Hour Radio · persistent demo player</b><small>Original demo bed · navigation-safe preview · live station not commissioned</small></div><div class="jh-radio-actions"><span class="jh-live-state">DEMO</span><select aria-label="Future audio data mode"><option value="low">Low data · 32 kbps</option><option value="standard">Standard · 96 kbps</option></select><select aria-label="Site theme"><option value="cream">Cream</option><option value="burgundy">Reddish brown</option><option value="night">Black</option></select><select aria-label="Language"></select><a href="${ROOT}feed.html">Feed</a><a href="${ROOT}radio.html">Radio</a></div><div class="jh-radio-progress"><i></i></div></div>`;const ribbon=document.querySelector('.ribbon,.top');if(ribbon)ribbon.insertAdjacentElement('afterend',dock);else document.body.prepend(dock);playBtn=dock.querySelector('.jh-radio-play');const sels=dock.querySelectorAll('select');modeSel=sels[0];themeSel=sels[1];langSel=sels[2];toast=document.createElement('div');toast.className='jh-radio-toast';document.body.append(toast);LANGS.forEach(([v,l])=>{const o=document.createElement('option');o.value=v;o.textContent=l;langSel.append(o)});modeSel.value=pref.dataMode||'low';themeSel.value=pref.theme||'cream';langSel.value=pref.lang||'en';playBtn.onclick=()=>playing?stopSynth():playSynth();modeSel.onchange=()=>{pref.dataMode=modeSel.value;persist();flash(modeSel.value==='low'?'Future live stream: low-data 32 kbps mode selected. Demo audio is generated locally.':'Future live stream: standard 96 kbps mode selected. Demo audio is generated locally.')};themeSel.onchange=()=>setTheme(themeSel.value);langSel.onchange=()=>translateNav(langSel.value)}
+function hydrate(root=document){
+ root.querySelector('#watch')?.addEventListener('click',()=>{const box=root.querySelector('#vid');if(!box)return;box.replaceChildren();const i=document.createElement('iframe');i.src='https://www.youtube-nocookie.com/embed/bGlp1kYrk68?autoplay=1';i.title='Jericho Hour Prayer Ministry published sermon';i.allow='autoplay; encrypted-media; picture-in-picture';i.allowFullscreen=true;box.append(i)});
+ const tabs=[...root.querySelectorAll('[data-filter]')],posts=[...root.querySelectorAll('.post')],empty=root.querySelector('#empty');if(tabs.length&&posts.length){const apply=f=>{let n=0;posts.forEach(p=>{const show=f==='all'||p.dataset.kind===f;p.hidden=!show;if(show)n++});if(empty)empty.style.display=n?'none':'block';tabs.forEach(b=>b.setAttribute('aria-selected',String(b.dataset.filter===f)))};tabs.forEach(b=>b.onclick=()=>apply(b.dataset.filter));apply('all')}
+ root.querySelector('#demoPost')?.addEventListener('click',()=>{const t=root.querySelector('#demoText'),s=root.querySelector('#composerState');if(!t||!s)return;if(!t.value.trim()){s.textContent='Write a sample first.';return}s.textContent='Preview only — nothing was published or saved.';t.value=''});
 }
-function theme(t){t=t==='cream'?'cream':'heritage';document.documentElement.dataset.jhTheme=t;document.documentElement.dataset.theme=t==='heritage'?'espresso':'cream';try{localStorage.setItem('jh-theme-v11',t)}catch{};const b=document.getElementById('jhTheme');if(b)b.textContent=t==='heritage'?'☀ Cream':'◐ Brown'}
-function integrateOriginalNav(){
- const desktop=document.querySelector('.head .links');
- if(desktop){
-   const current=location.pathname.split('/').pop()||'index.html';
-   const nav=[
-    ['./','Home',false],
-    ['https://www.jerichohourprayerministry.com/meet-our-leaders','Meet Our Leaders',true],
-    ['programs.html','Events',false],
-    ['radio.html','Radio',false],
-    ['schedule.html','Schedule',false],
-    ['booking.html','Counseling',false],
-    ['community.html','Outreach',false]
-   ];
-   desktop.replaceChildren(...nav.map(([href,label,external])=>{const a=document.createElement('a');a.href=href;a.textContent=label;if(external){a.target='_blank';a.rel='noopener'}const base=href.replace('./','index.html');if(!external&&((current==='index.html'&&href==='./')||current===base))a.setAttribute('aria-current','page');return a}));
- }
- const menu=document.querySelector('.mobile-nav menu');
- if(menu){
-   const nav=[['./','Home'],['https://www.jerichohourprayerministry.com/meet-our-leaders','Meet Our Leaders'],['programs.html','Events'],['radio.html','Radio'],['sermons.html','Sermons'],['schedule.html','Schedule'],['booking.html','Counseling'],['community.html','Outreach'],['resources.html','Resources'],['orphanage.html','Ghana Care'],['member.html','Member access']];
-   menu.replaceChildren(...nav.map(([href,label])=>{const li=document.createElement('li'),a=document.createElement('a');a.href=href;a.textContent=label;if(href.startsWith('https:')){a.target='_blank';a.rel='noopener'}li.append(a);return li}));
- }
-}
-function mount(){integrateOriginalNav();
- let select=document.getElementById('jhLang'), toggle=document.getElementById('jhTheme'), full=document.getElementById('jhFullTranslate');
- if(!select||!toggle){
-   const bar=document.createElement('div');bar.className='jh-expbar';bar.setAttribute('aria-label','Display preferences');
-   if(!select){select=document.createElement('select');select.id='jhLang';select.setAttribute('aria-label','Display language');for(const [v,n] of langs){const o=document.createElement('option');o.value=v;o.textContent=n;select.append(o)}bar.append(select)}
-   if(!toggle){toggle=document.createElement('button');toggle.type='button';toggle.id='jhTheme';bar.append(toggle)}
-   full=document.createElement('a');full.id='jhFullTranslate';full.target='_blank';full.rel='noopener';full.textContent='Full page ↗';bar.append(full);document.body.append(bar);
- }else if(!full){full=document.createElement('a');full.id='jhFullTranslate';full.target='_blank';full.rel='noopener';full.textContent='Full page ↗';select.parentElement?.append(full)}
- const savedTheme=(()=>{try{return localStorage.getItem('jh-theme-v11')}catch{return null}})()||'heritage';theme(savedTheme);
- toggle.onclick=()=>theme(document.documentElement.dataset.jhTheme==='heritage'?'cream':'heritage');
- const savedLang=(()=>{try{return localStorage.getItem('jh-lang-v11')}catch{return null}})()||'en';if([...select.options].some(o=>o.value===savedLang))select.value=savedLang;translateNav(select.value);select.onchange=()=>translateNav(select.value);
-}
+const SAFE=new Set(['','index.html','radio.html','sermons.html','programs.html','community.html','feed.html','resources.html','orphanage.html']);
+async function softNav(url,push=true){try{const u=new URL(url,location.href),name=u.pathname.split('/').pop();if(!u.pathname.startsWith(ROOT)||!SAFE.has(name))return false;const r=await fetch(u,{headers:{'X-JH-Partial':'1'}});if(!r.ok)return false;const text=await r.text(),doc=new DOMParser().parseFromString(text,'text/html'),main=doc.querySelector('main');if(!main)return false;document.querySelector('main')?.replaceWith(main);document.title=doc.title||document.title;if(push)history.pushState({jh:true},'',u.pathname+u.search+u.hash);document.querySelectorAll('.links a').forEach(a=>a.removeAttribute('aria-current'));const active=[...document.querySelectorAll('.links a')].find(a=>new URL(a.href,location.href).pathname===u.pathname);active?.setAttribute('aria-current','page');hydrate(document);window.scrollTo({top:0,behavior:'instant'});return true}catch{return false}}
+function navIntercept(){document.addEventListener('click',async e=>{const a=e.target.closest('a');if(!a||e.defaultPrevented||a.target==='_blank'||a.hasAttribute('download')||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)return;const u=new URL(a.href,location.href);if(u.origin!==location.origin||!u.pathname.startsWith(ROOT))return;const name=u.pathname.split('/').pop();if(!SAFE.has(name))return;e.preventDefault();if(!(await softNav(u,true)))location.href=u.href});window.addEventListener('popstate',()=>softNav(location.href,false))}
+function mount(){mountDock();setTheme(pref.theme||'cream');translateNav(pref.lang||'en');hydrate(document);navIntercept()}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
 })();
