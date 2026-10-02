@@ -1,0 +1,82 @@
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+BOAMAN = ROOT / "boaman" / "index.html"
+DEMO = ROOT / "boaman" / "demo" / "index.html"
+HOME = ROOT / "index.html"
+LEGACY = ROOT / "fastpath" / "index.html"
+
+def fail(msg):
+    print(f"FAIL: {msg}", file=sys.stderr)
+    raise SystemExit(1)
+
+for path in [BOAMAN, DEMO, HOME, LEGACY]:
+    if not path.exists():
+        fail(f"missing required surface: {path.relative_to(ROOT)}")
+
+bo = BOAMAN.read_text(encoding="utf-8")
+demo = DEMO.read_text(encoding="utf-8")
+home = HOME.read_text(encoding="utf-8")
+legacy = LEGACY.read_text(encoding="utf-8")
+
+# Canonical public replacement must never route visitors back to the stale Vercel hostname.
+for label, source in [("BOAMAN page", bo), ("IZZYAKOS home", home), ("legacy FastPath redirect", legacy)]:
+    if "boaman.izzyakos.com" in source:
+        fail(f"{label} still references stale boaman.izzyakos.com")
+
+required_boaman = [
+    "Make capability visible.",
+    "Make opportunity reachable.",
+    "BOAMAN · IZZYAKOS LLC · PRE-PILOT",
+    'href="./demo/"',
+    "Customer-discovery comparison",
+    "LinkedIn",
+    "Indeed",
+    "ZipRecruiter / CareerBuilder",
+    "working competitive hypothesis",
+    "#031429",
+    "#1677d2",
+    "#ffc72c",
+    "#071527",
+    ".cta.gold",
+    ".cta.blue",
+    ".cta.outline",
+]
+for token in required_boaman:
+    if token not in bo:
+        fail(f"BOAMAN stable surface missing contract token: {token}")
+
+# Explicit foreground/background pairs prevent the print/reviewer surface from regressing to white-on-white.
+contrast_contracts = [
+    ".cta.gold{background:var(--gold);color:var(--ink)}",
+    ".cta.blue{background:var(--blue);color:#fff}",
+    ".matrix{width:100%;border-collapse:collapse;background:#fff;color:#10233a",
+    ".matrix th{background:#0b5fb7;color:#fff}",
+]
+for token in contrast_contracts:
+    if token not in bo:
+        fail(f"BOAMAN contrast contract missing: {token}")
+
+if 'href="./boaman/"' not in home or 'href="./boaman/#pilot"' not in home:
+    fail("IZZYAKOS homepage is not routed to the stable BOAMAN surface")
+
+if "../boaman/" not in legacy:
+    fail("legacy FastPath route does not redirect to stable BOAMAN path")
+
+required_demo = [
+    "BOAMAN Reviewer Demo",
+    "Walk the BOAMAN mechanism.",
+    "fictional data",
+    "not a hiring prediction",
+    "Supported",
+    "Partial",
+    "Unknown",
+    "Gap",
+]
+for token in required_demo:
+    if token.lower() not in demo.lower():
+        fail(f"BOAMAN reviewer demo missing: {token}")
+
+print("PASS: BOAMAN stable public surface")
+print("route=/boaman/ demo=/boaman/demo/ stale-domain-links=0 contrast=locked")
