@@ -23,3 +23,5 @@ jobs:
         run: node scripts/check_inline_modules.mjs
       - name: Validate FastPath reviewer demo
         run: python3 scripts/reviewer_demo_gate.py
+      - name: Validate BOAMAN stable public surface
+        run: python3 scripts/boaman_surface_gate.py
