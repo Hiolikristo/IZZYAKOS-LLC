@@ -33,10 +33,12 @@ CONTENT_CONTRACTS = {
     "fastpath/index.html": [
         "FastPath is now BOAMAN", "workforce-intelligence", "Open BOAMAN",
     ],
-    "baoman/index.html": ["Open BOAMAN"],
-    "boaman/index.html": [
+    "baoman/index.html": [
         "BOAMAN", "Make capability visible.", "Make opportunity reachable.", "Customer-discovery comparison",
-        "Capital discipline", "FUNDMEISTER",
+        "Capital discipline", "FUNDMEISTER", "Enter interactive BOAMAN",
+    ],
+    "boaman/index.html": [
+        "BOAMAN", "Open BOAMAN",
     ],
     "boaman/fundmeister/index.html": [
         "BOAMAN · FUNDMEISTER", "Authorized project access", "Cap table", "SAFEs / Notes",
