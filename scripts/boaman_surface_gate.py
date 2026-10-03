@@ -6,12 +6,13 @@ BOAMAN = ROOT / "boaman" / "index.html"
 HOME = ROOT / "index.html"
 LEGACY = ROOT / "fastpath" / "index.html"
 OLD_ROUTE = ROOT / "baoman" / "index.html"
+FUNDMEISTER = ROOT / "boaman" / "fundmeister" / "index.html"
 
 def fail(msg):
     print(f"FAIL: {msg}", file=sys.stderr)
     raise SystemExit(1)
 
-for path in [BOAMAN, HOME, LEGACY, OLD_ROUTE]:
+for path in [BOAMAN, HOME, LEGACY, OLD_ROUTE, FUNDMEISTER]:
     if not path.exists():
         fail(f"missing required surface: {path.relative_to(ROOT)}")
 
@@ -19,6 +20,7 @@ bo = BOAMAN.read_text(encoding="utf-8")
 home = HOME.read_text(encoding="utf-8")
 legacy = LEGACY.read_text(encoding="utf-8")
 old_route = OLD_ROUTE.read_text(encoding="utf-8")
+fm = FUNDMEISTER.read_text(encoding="utf-8")
 
 # Canonical BOAMAN public route is https://izzyakos.com/boaman/.
 # Deprecated BOAMAN hosts and stale short Vercel aliases must not return to sponsor-facing surfaces.
@@ -42,6 +44,7 @@ required_boaman = [
     ".cta.gold",
     ".cta.blue",
     ".cta.outline",
+    'href="./fundmeister/"',
 ]
 for token in required_boaman:
     if token not in bo:
@@ -70,5 +73,35 @@ if "../boaman/" not in legacy:
 if "../boaman/" not in old_route:
     fail("misspelled /baoman route does not redirect to canonical /boaman path")
 
-print("PASS: BOAMAN stable public surface")
-print("route=/boaman/ canonical=https://izzyakos.com/boaman/ deprecated-hosts=0 contrast=locked")
+
+# BOAMAN -> FUNDMEISTER click-loop contract.
+for token in [
+    "BOAMAN · FUNDMEISTER",
+    "BOAMAN capital workspace · powered by FUNDMEISTER",
+    'const requestedProjectKey="boaman";',
+    "Cap table",
+    "SAFEs / Notes",
+    "Use of funds",
+    "Accounts / Expenses",
+    "Immutable ledger",
+    "Reports",
+    'window.open("about:blank","fundmeister-auth"',
+    'event.origin!=="https://boaman.izzyakos.com"',
+    'type!=="fundmeister-auth-session"',
+    "skipBrowserRedirect:true",
+]:
+    if token not in fm:
+        fail(f"BOAMAN FUNDMEISTER workspace missing contract token: {token}")
+
+for forbidden in [
+    "#/jobs",
+    "#/register",
+    "Candidate Account",
+    'href="https://boaman.izzyakos.com',
+    "/baoman/",
+]:
+    if forbidden in fm:
+        fail(f"BOAMAN FUNDMEISTER workspace contains candidate/deprecated route token: {forbidden}")
+
+print("PASS: BOAMAN stable public surface + FUNDMEISTER click loop")
+print("route=/boaman/ fundmeister=/boaman/fundmeister/ canonical=https://izzyakos.com/boaman/ candidate-bounce=0 deprecated-hosts=0 contrast=locked")

@@ -13,6 +13,7 @@ HTML_FILES = [
     ROOT / "baoman" / "index.html",
     ROOT / "baoman" / "demo" / "index.html",
     ROOT / "boaman" / "index.html",
+    ROOT / "boaman" / "fundmeister" / "index.html",
     ROOT / "tracebridge" / "index.html",
     ROOT / "chopx" / "index.html",
     ROOT / "accra" / "index.html",
@@ -36,6 +37,10 @@ CONTENT_CONTRACTS = {
     "boaman/index.html": [
         "BOAMAN", "Make capability visible.", "Make opportunity reachable.", "Customer-discovery comparison",
         "Capital discipline", "FUNDMEISTER",
+    ],
+    "boaman/fundmeister/index.html": [
+        "BOAMAN · FUNDMEISTER", "Authorized project access", "Cap table", "SAFEs / Notes",
+        "Use of funds", "Accounts / Expenses", "Immutable ledger", "Reports",
     ],
     "tracebridge/index.html": [
         "IFS Cloud", "Quality", "label", "physical verification", "Tool Crib", "SCAN OUT", "SCAN IN", "receiving",
