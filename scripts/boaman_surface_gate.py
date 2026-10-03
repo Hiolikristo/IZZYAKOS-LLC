@@ -20,10 +20,11 @@ demo = DEMO.read_text(encoding="utf-8")
 home = HOME.read_text(encoding="utf-8")
 legacy = LEGACY.read_text(encoding="utf-8")
 
-# Canonical public replacement must never route visitors back to the stale Vercel hostname.
+# Canonical BOAMAN production is now boaman.izzyakos.com.
+# The stale short Vercel alias must never return to sponsor-facing surfaces.
 for label, source in [("BOAMAN page", bo), ("IZZYAKOS home", home), ("legacy FastPath redirect", legacy)]:
-    if "boaman.izzyakos.com" in source:
-        fail(f"{label} still references stale boaman.izzyakos.com")
+    if "fastpath-v0.vercel.app" in source:
+        fail(f"{label} still references stale fastpath-v0.vercel.app")
 
 required_boaman = [
     "Make capability visible.",
@@ -58,8 +59,12 @@ for token in contrast_contracts:
     if token not in bo:
         fail(f"BOAMAN contrast contract missing: {token}")
 
-if 'href="./boaman/"' not in home or 'href="./boaman/#pilot"' not in home:
-    fail("IZZYAKOS homepage is not routed to the stable BOAMAN surface")
+if 'href="https://boaman.izzyakos.com/"' not in home:
+    fail("IZZYAKOS homepage does not launch canonical BOAMAN production")
+if 'href="./boaman/"' not in home:
+    fail("IZZYAKOS homepage is missing the local BOAMAN system brief")
+if 'href="https://boaman.izzyakos.com/#/pilot"' not in home:
+    fail("IZZYAKOS homepage is missing the canonical BOAMAN pilot route")
 
 if "../boaman/" not in legacy:
     fail("legacy FastPath route does not redirect to stable BOAMAN path")
@@ -79,4 +84,4 @@ for token in required_demo:
         fail(f"BOAMAN reviewer demo missing: {token}")
 
 print("PASS: BOAMAN stable public surface")
-print("route=/boaman/ demo=/boaman/demo/ stale-domain-links=0 contrast=locked")
+print("route=/boaman/ demo=/boaman/demo/ canonical=https://boaman.izzyakos.com/ stale-vercel-alias=0 contrast=locked")
