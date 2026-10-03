@@ -218,13 +218,21 @@ function renderLedger(){
   const rows=(cache.ledger||[]).slice().sort((a,b)=>num(b.id)-num(a.id)).slice(0,150);
   $("#ledgerTable").innerHTML=table(["#","Time","Project","Event","Entity","Previous hash","Event hash"],rows.map(x=>'<tr><td>'+esc(x.id)+'</td><td>'+fmtDateTime(x.created_at)+'</td><td>'+esc(projectById(x.project_id)?.name||"Company")+'</td><td>'+esc(x.event_type)+'</td><td>'+esc(x.entity_type+" · "+x.entity_id)+'</td><td class="fmHash">'+esc(x.previous_hash||"GENESIS")+'</td><td class="fmHash">'+esc(x.event_hash)+'</td></tr>'),"No ledger events visible for this scope.");
 }
+function downloadStatement(id){
+  const snap=(cache.reportSnapshots||[]).find(x=>x.id===id);if(!snap)return;
+  const project=projectById(snap.project_id)?.name||"company";
+  const packet={statement_id:snap.id,project,period_start:snap.period_start,period_end:snap.period_end,generated_at:snap.generated_at,delivery_state:snap.delivery_state,payload:snap.payload};
+  const blob=new Blob([JSON.stringify(packet,null,2)],{type:"application/json;charset=utf-8"});
+  const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="fundmeister-"+project.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+String(snap.period_end).slice(0,10)+".json";document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
 function renderReports(){
   $("#reportSubs").innerHTML=table(["Report","Project","Cadence","Recipients","Channel","Delivery","Next run"],(cache.reportSubs||[]).map(x=>'<tr><td>'+esc(x.report_name)+'</td><td>'+esc(projectById(x.project_id)?.name||"Company-wide")+'</td><td>'+esc(x.cadence)+'</td><td>'+esc((x.recipients||[]).join(", ")||"—")+'</td><td>'+esc(x.delivery_channel)+'</td><td>'+badge(x.delivery_state)+'</td><td>'+fmtDateTime(x.next_run_at)+'</td></tr>'),"No expenditure-report schedule configured.");
   const snaps=(cache.reportSnapshots||[]).slice().sort((a,b)=>String(b.generated_at).localeCompare(String(a.generated_at))).slice(0,100);
-  $("#reportSnapshots").innerHTML=table(["Generated","Period","Project","Spend","Transactions","Open reviews","Delivery"],snaps.map(x=>{
+  $("#reportSnapshots").innerHTML=table(["Generated","Period","Project","Spend","Transactions","Open reviews","Ledger proof","Delivery","Statement"],snaps.map(x=>{
     const p=x.payload||{};
-    return '<tr><td>'+fmtDateTime(x.generated_at)+'</td><td>'+fmtDateTime(x.period_start)+' → '+fmtDateTime(x.period_end)+'</td><td>'+esc(projectById(x.project_id)?.name||"Company-wide")+'</td><td class="fmMoney">'+money(p.spend_total)+'</td><td>'+esc(p.transaction_count||0)+'</td><td>'+esc(p.open_review_count||0)+'</td><td>'+badge(x.delivery_state)+'</td></tr>';
+    return '<tr><td>'+fmtDateTime(x.generated_at)+'</td><td>'+fmtDateTime(x.period_start)+' → '+fmtDateTime(x.period_end)+'</td><td>'+esc(projectById(x.project_id)?.name||"Company-wide")+'</td><td class="fmMoney">'+money(p.spend_total)+'</td><td>'+esc(p.transaction_count||0)+'</td><td>'+esc(p.open_review_count||0)+'</td><td class="fmHash">'+esc(p.ledger_tip_hash||"—")+'</td><td>'+badge(x.delivery_state)+'</td><td><button type="button" class="statementDownload smallBtn ghost" data-id="'+x.id+'">Download JSON</button></td></tr>';
   }),"No scheduled statement snapshots generated yet.");
+  document.querySelectorAll(".statementDownload").forEach(btn=>btn.onclick=()=>downloadStatement(btn.dataset.id));
 }
 function wireProjectFilters(){
   ["#capProjectFilter","#convertProjectFilter","#uofProjectFilter","#holderProject","#poolProject","#convertProject","#uofProject","#txProject"].forEach(id=>ensureProjectSelect(id,false));
