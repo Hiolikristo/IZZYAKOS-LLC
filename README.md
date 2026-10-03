@@ -19,8 +19,8 @@ The portfolio is cohesive because each product keeps identity, evidence, workflo
 ## Public routes
 
 - `/` — company thesis, flagship systems and live-launch cards
-- `/baoman/` — accepted BOAMAN company/product route
-- `/fastpath/` — legacy transition route redirected to `/baoman/`
+- `/boaman/` — accepted BOAMAN company/product route
+- `/fastpath/` — legacy transition route redirected to `/boaman/`
 - `/fastpath/demo/` — fictional-data reviewer mechanism demo
 - `/tracebridge/` — TRACEBridge system brief; live review launches to `tracebridge-review.vercel.app`
 - `/chopx/` — CHOPX system brief; live driver surface launches to `chopexpress-driver-ui.vercel.app`
@@ -34,7 +34,7 @@ The portfolio is cohesive because each product keeps identity, evidence, workflo
 
 The company site explains each product, while primary launch CTAs route to the real review/deployment surface when one is available:
 
-- BOAMAN → `https://izzyakos.com/baoman/`
+- BOAMAN → `https://izzyakos.com/boaman/`
 - TRACEBridge → `https://tracebridge-review.vercel.app/`
 - CHOPX → `https://chopexpress-driver-ui.vercel.app/`
 - My Accra International Market → `https://myaccraintmarket-demo.vercel.app/`
