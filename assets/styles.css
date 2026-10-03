@@ -47,3 +47,7 @@ html,body{width:100%;max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:1
 @media(max-width:850px){.nav{min-height:76px;gap:12px}.brand-logo{height:48px;max-width:64px}.brand-name{font-size:.84rem;letter-spacing:.07em}.nav-links{margin-left:auto}.nav-links .btn{min-width:88px}.footer-grid{display:grid;grid-template-columns:1fr;gap:14px}.footer-grid>*{min-width:0}.project-actions,.quickNav,.demo-actions{max-width:100%}}
 @media(max-width:520px){.shell{width:calc(100% - 28px)}.site-header .shell{width:calc(100% - 24px)}.nav{min-height:68px}.brand{gap:8px}.brand-logo{height:42px;max-width:54px}.brand-name{font-size:.76rem}.btn-small{min-height:42px;padding-inline:12px}.card,.hero-panel,.callout,.validation-card{max-width:100%;min-width:0}.truth-table{max-width:100%;overflow-x:auto}}
 @media(orientation:landscape) and (max-height:520px){.nav{min-height:58px}.brand-logo{height:38px;max-width:48px}.brand-name{font-size:.72rem}.hero{padding:34px 0 30px}.section{padding:38px 0}.footer{padding:28px 0}.btn{min-height:42px}}
+
+/* 2026-10-03 WebOne presentation cohesion */
+.founder-section{background:linear-gradient(180deg,rgba(201,154,46,.055),rgba(7,17,31,0))}.founder-section .card{min-height:100%}.founder-section .card p+p{margin-top:14px}.founder-ask{margin-top:18px}.founder-ask h3{margin-top:8px;font-size:clamp(1.55rem,3vw,2.15rem)}
+@media(max-width:850px){.founder-ask .btn{width:100%}}
