@@ -9,7 +9,9 @@ ROOT = Path(__file__).resolve().parents[1]
 HTML_FILES = [
     ROOT / "index.html",
     ROOT / "fastpath" / "index.html",
-    ROOT / "fastpath" / "demo" / "index.html",\n    ROOT / "baoman" / "index.html",\n    ROOT / "baoman" / "demo" / "index.html",
+    ROOT / "fastpath" / "demo" / "index.html",
+    ROOT / "baoman" / "index.html",
+    ROOT / "baoman" / "demo" / "index.html",
     ROOT / "tracebridge" / "index.html",
     ROOT / "chopx" / "index.html",
     ROOT / "accra" / "index.html",
@@ -29,7 +31,10 @@ CONTENT_CONTRACTS = {
     "fastpath/index.html": [
         "FastPath is now BOAMAN", "workforce-intelligence", "Open BOAMAN",
     ],
-    "baoman/index.html": [\n        "BOAMAN", "Make capability visible.", "Make opportunity reachable.", "Customer-discovery comparison",\n    ],\n    "tracebridge/index.html": [
+    "baoman/index.html": [
+        "BOAMAN", "Make capability visible.", "Make opportunity reachable.", "Customer-discovery comparison",
+    ],
+    "tracebridge/index.html": [
         "IFS Cloud", "Quality", "label", "physical verification", "Tool Crib", "SCAN OUT", "SCAN IN", "receiving",
     ],
     "chopx/index.html": [
