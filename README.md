@@ -34,7 +34,7 @@ The portfolio is cohesive because each product keeps identity, evidence, workflo
 
 The company site explains each product, while primary launch CTAs route to the real review/deployment surface when one is available:
 
-- BOAMAN → `https://izzyakos.com/baoman/`
+- BOAMAN → `https://izzyakos.com/boaman/`
 - TRACEBridge → `https://tracebridge-review.vercel.app/`
 - CHOPX → `https://chopexpress-driver-ui.vercel.app/`
 - My Accra International Market → `https://myaccraintmarket-demo.vercel.app/`
