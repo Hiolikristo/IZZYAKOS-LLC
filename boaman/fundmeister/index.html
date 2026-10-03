@@ -355,7 +355,7 @@ $("#reportForm").addEventListener("submit",async e=>{
 $("#testForm").addEventListener("submit",async e=>{e.preventDefault();const opt=$("#testProject").selectedOptions[0];const payload={organization_id:opt.dataset.org,project_id:$("#testProject").value,test_date:$("#testDate").value,scenario:$("#testScenario").value.trim(),result:$("#testResult").value,device_context:$("#testDevice").value.trim()||null,issue_count:Number($("#testIssues").value||0),persistence_observed:$("#testPersistence").value===""?null:$("#testPersistence").value==="true",stability_observed:$("#testStability").value===""?null:$("#testStability").value==="true",notes:$("#testNotes").value.trim()||null,test_type:"usability"};const {error}=await supabase.from("fm_validation_ops").insert(payload);$("#testNotice").classList.remove("hidden");$("#testNotice").textContent=error?error.message:"Validation evidence saved.";$("#testNotice").classList.toggle("error",!!error);if(!error){e.target.reset();await load()}});
 
 window.addEventListener("message",async(event)=>{
-  if(event.origin!=="https://boaman.izzyakos.com")return;
+  if(event.origin!=="https://izzyakos.com")return;
   if(event.data?.type!=="fundmeister-auth-session")return;
   const access_token=event.data?.session?.access_token;
   const refresh_token=event.data?.session?.refresh_token;
