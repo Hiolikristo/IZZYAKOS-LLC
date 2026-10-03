@@ -78,12 +78,21 @@ for required in [
     if required not in fm:
         fail(f"BOAMAN FUNDMEISTER workspace missing: {required}")
 
+for required in [
+    'event.origin!=="https://boaman.izzyakos.com"',
+    'type!=="fundmeister-auth-session"',
+    "skipBrowserRedirect:true",
+    'window.open("about:blank","fundmeister-auth"',
+]:
+    if required not in fm:
+        fail(f"FUNDMEISTER auth bridge missing: {required}")
+
 for forbidden in [
     "#/jobs",
     "#/register",
     "Candidate Account",
     "location.replace(",
-    "boaman.izzyakos.com",
+    'href="https://boaman.izzyakos.com',
     "/baoman/",
 ]:
     if forbidden in fm:
