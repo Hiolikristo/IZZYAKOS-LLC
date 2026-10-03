@@ -10,10 +10,9 @@ HTML_FILES = [
     ROOT / "index.html",
     ROOT / "fastpath" / "index.html",
     ROOT / "fastpath" / "demo" / "index.html",
-    ROOT / "boaman" / "index.html",
-    ROOT / "boaman" / "demo" / "index.html",
     ROOT / "baoman" / "index.html",
     ROOT / "baoman" / "demo" / "index.html",
+    ROOT / "boaman" / "index.html",
     ROOT / "tracebridge" / "index.html",
     ROOT / "chopx" / "index.html",
     ROOT / "accra" / "index.html",
@@ -33,11 +32,11 @@ CONTENT_CONTRACTS = {
     "fastpath/index.html": [
         "FastPath is now BOAMAN", "workforce-intelligence", "Open BOAMAN",
     ],
-    "boaman/index.html": [
+    "baoman/index.html": [
         "BOAMAN", "Make capability visible.", "Make opportunity reachable.", "Customer-discovery comparison",
         "Capital discipline", "FUNDMEISTER",
     ],
-    "baoman/index.html": ["BOAMAN canonical route", "izzyakos.com/boaman/"],
+    "boaman/index.html": ["BOAMAN has moved", "izzyakos.com/baoman"],
     "tracebridge/index.html": [
         "IFS Cloud", "Quality", "label", "physical verification", "Tool Crib", "SCAN OUT", "SCAN IN", "receiving",
     ],
@@ -145,11 +144,11 @@ for html_file in HTML_FILES:
         parsed = urlparse(href)
         if parsed.scheme in {"http", "https"} and parsed.netloc in {"fastpath-v0.vercel.app","boaman.izzyakos.com"}:
             fail("deprecated BOAMAN/FastPath host must not be used for sponsor review")
-        if "/baoman/" in normalized and rel not in {"baoman/index.html","baoman/demo/index.html"}:
-            fail(f"misspelled BOAMAN route must not return: {rel}: {href}")
+        if "/boaman/" in normalized and rel not in {"boaman/index.html"}:
+            fail(f"deprecated /boaman route must not return: {rel}: {href}")
 
         # Major visible CTA buttons on the company/product pages must explain purpose and destination.
-        if rel not in {"fastpath/demo/index.html", "boaman/demo/index.html", "baoman/demo/index.html"} and "btn" in link["class"].split():
+        if rel not in {"fastpath/demo/index.html", "baoman/demo/index.html"} and "btn" in link["class"].split():
             if not link["purpose"].strip() or not link["next"].strip():
                 fail(f"button CTA missing data-purpose/data-next in {rel}: {href}")
 
