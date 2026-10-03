@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { spawnSync } from "node:child_process";
 import { exit } from "node:process";
-const pages=["control/index.html","fundmeister/workspace/index.html","boaman/fundmeister/index.html"];
+const pages=["control/index.html","fundmeister/workspace/index.html"];
 for(const path of pages){
   const html=fs.readFileSync(path,"utf8");
   const scripts=[...html.matchAll(/<script\b[^>]*type=["']module["'][^>]*>([\s\S]*?)<\/script>/gi)];
