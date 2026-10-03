@@ -14,7 +14,7 @@ def fail(msg):
     print(f"FAIL: {msg}", file=sys.stderr)
     raise SystemExit(1)
 
-for path in [BOAMAN, HOME, LEGACY, TYPO_ROUTE, DEMO, TYPO_DEMO, FUNDMEISTER]:
+for path in [BOAMAN, HOME, LEGACY, DEMO, FUNDMEISTER]:
     if not path.exists():
         fail(f"missing required surface: {path.relative_to(ROOT)}")
 
@@ -129,4 +129,4 @@ for forbidden in [
         fail(f"BOAMAN FUNDMEISTER workspace contains deprecated/candidate route token: {forbidden}")
 
 print("PASS: BOAMAN canonical public surface + reviewer demo + FUNDMEISTER click loop")
-print("route=/boaman/ typo_redirect=/baoman/ demo=/boaman/demo/ fundmeister=/boaman/fundmeister/ canonical=https://izzyakos.com/boaman/ contrast=locked")
+print("route=/boaman/ demo=/boaman/demo/ fundmeister=/boaman/fundmeister/ canonical=https://izzyakos.com/boaman/ contrast=locked")
