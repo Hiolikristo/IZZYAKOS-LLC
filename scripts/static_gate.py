@@ -17,6 +17,7 @@ HTML_FILES = [
     ROOT / "fundmeister" / "workspace" / "index.html",
     ROOT / "fundmeister.html",
     ROOT / "control" / "index.html",
+    ROOT / "funders" / "index.html",
 ]
 
 CONTENT_CONTRACTS = {
@@ -52,6 +53,10 @@ CONTENT_CONTRACTS = {
     "control/index.html": [
         "Private company operations", "Truth boundary", "Portfolio", "Kanban", "Gantt",
         "Talent", "Capital & Equipment", "Validation", "Funding & Budget", "Email Registry", "Audit",
+    ],
+    "funders/index.html": [
+        "Funder", "sponsor", "BOAMAN", "TRACEBridge", "CHOPX", "My Accra",
+        "FUNDMEISTER", "Engineering evidence is not market proof",
     ],
 }
 
