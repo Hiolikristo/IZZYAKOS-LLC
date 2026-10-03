@@ -23,10 +23,10 @@ old_route = OLD_ROUTE.read_text(encoding="utf-8")
 fm = FUNDMEISTER.read_text(encoding="utf-8")
 
 # Canonical BOAMAN public route is https://izzyakos.com/boaman/.
-# Deprecated BOAMAN hosts and stale short Vercel aliases must not return to sponsor-facing surfaces.
+# The short Vercel alias remains deprecated. The BOAMAN custom subdomain is the operational application origin and may appear only as an intentional app/workspace destination.
 for label, source in [("BOAMAN page", bo), ("IZZYAKOS home", home), ("legacy FastPath redirect", legacy)]:
-    if "fastpath-v0.vercel.app" in source or "boaman.izzyakos.com" in source:
-        fail(f"{label} still references a deprecated BOAMAN host")
+    if "fastpath-v0.vercel.app" in source:
+        fail(f"{label} still references the deprecated short Vercel host")
 
 required_boaman = [
     "Make capability visible.",
@@ -44,7 +44,7 @@ required_boaman = [
     ".cta.gold",
     ".cta.blue",
     ".cta.outline",
-    'href="./fundmeister/"',
+    'href="https://boaman.izzyakos.com/#/fundmeister"',
 ]
 for token in required_boaman:
     if token not in bo:
@@ -77,31 +77,22 @@ if "../boaman/" not in old_route:
 # BOAMAN -> FUNDMEISTER click-loop contract.
 for token in [
     "BOAMAN · FUNDMEISTER",
-    "BOAMAN capital workspace · powered by FUNDMEISTER",
-    'const requestedProjectKey="boaman";',
-    "Cap table",
-    "SAFEs / Notes",
-    "Use of funds",
-    "Accounts / Expenses",
-    "Immutable ledger",
-    "Reports",
-    'window.open("about:blank","fundmeister-auth"',
-    'event.origin!=="https://boaman.izzyakos.com"',
-    'type!=="fundmeister-auth-session"',
-    "skipBrowserRedirect:true",
+    "same operational origin as BOAMAN authentication",
+    'https://boaman.izzyakos.com/#/fundmeister',
 ]:
     if token not in fm:
-        fail(f"BOAMAN FUNDMEISTER workspace missing contract token: {token}")
+        fail(f"BOAMAN FUNDMEISTER redirect missing contract token: {token}")
 
 for forbidden in [
     "#/jobs",
     "#/register",
     "Candidate Account",
-    'href="https://boaman.izzyakos.com',
+    "fundmeister-auth",
+    "skipBrowserRedirect",
     "/baoman/",
 ]:
     if forbidden in fm:
-        fail(f"BOAMAN FUNDMEISTER workspace contains candidate/deprecated route token: {forbidden}")
+        fail(f"BOAMAN FUNDMEISTER redirect contains candidate/legacy auth token: {forbidden}")
 
 print("PASS: BOAMAN stable public surface + FUNDMEISTER click loop")
-print("route=/boaman/ fundmeister=/boaman/fundmeister/ canonical=https://izzyakos.com/boaman/ candidate-bounce=0 deprecated-hosts=0 contrast=locked")
+print("route=/boaman/ fundmeister=https://boaman.izzyakos.com/#/fundmeister canonical=https://izzyakos.com/boaman/ candidate-bounce=0 stale-fastpath-host=0 contrast=locked")
