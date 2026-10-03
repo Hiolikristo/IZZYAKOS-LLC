@@ -10,8 +10,6 @@ HTML_FILES = [
     ROOT / "index.html",
     ROOT / "fastpath" / "index.html",
     ROOT / "fastpath" / "demo" / "index.html",
-    ROOT / "baoman" / "index.html",
-    ROOT / "baoman" / "demo" / "index.html",
     ROOT / "boaman" / "index.html",
     ROOT / "boaman" / "fundmeister" / "index.html",
     ROOT / "tracebridge" / "index.html",
@@ -32,9 +30,6 @@ CONTENT_CONTRACTS = {
     ],
     "fastpath/index.html": [
         "FastPath is now BOAMAN", "workforce-intelligence", "Open BOAMAN",
-    ],
-    "baoman/index.html": [
-        "BOAMAN", "Open BOAMAN",
     ],
     "boaman/index.html": [
         "BOAMAN", "Make capability visible.", "Make opportunity reachable.", "Customer-discovery comparison",
@@ -156,7 +151,7 @@ for html_file in HTML_FILES:
             fail("deprecated BOAMAN/FastPath host must not be used for sponsor review")
 
         # Major visible CTA buttons on the company/product pages must explain purpose and destination.
-        if rel not in {"fastpath/demo/index.html", "baoman/demo/index.html", "boaman/demo/index.html"} and "btn" in link["class"].split():
+        if rel not in {"fastpath/demo/index.html", "boaman/demo/index.html"} and "btn" in link["class"].split():
             if not link["purpose"].strip() or not link["next"].strip():
                 fail(f"button CTA missing data-purpose/data-next in {rel}: {href}")
 
