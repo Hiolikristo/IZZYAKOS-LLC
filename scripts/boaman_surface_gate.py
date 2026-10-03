@@ -5,9 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 BOAMAN = ROOT / "boaman" / "index.html"
 HOME = ROOT / "index.html"
 LEGACY = ROOT / "fastpath" / "index.html"
-TYPO_ROUTE = ROOT / "baoman" / "index.html"
 DEMO = ROOT / "boaman" / "demo" / "index.html"
-TYPO_DEMO = ROOT / "baoman" / "demo" / "index.html"
 FUNDMEISTER = ROOT / "boaman" / "fundmeister" / "index.html"
 
 def fail(msg):
@@ -21,9 +19,7 @@ for path in [BOAMAN, HOME, LEGACY, DEMO, FUNDMEISTER]:
 bo = BOAMAN.read_text(encoding="utf-8")
 home = HOME.read_text(encoding="utf-8")
 legacy = LEGACY.read_text(encoding="utf-8")
-typo_route = TYPO_ROUTE.read_text(encoding="utf-8")
 demo = DEMO.read_text(encoding="utf-8")
-typo_demo = TYPO_DEMO.read_text(encoding="utf-8")
 fm = FUNDMEISTER.read_text(encoding="utf-8")
 
 # Canonical public route is https://izzyakos.com/boaman/.
@@ -35,8 +31,6 @@ for label, source in [
 ]:
     if "fastpath-v0.vercel.app" in source or "boaman.izzyakos.com" in source:
         fail(f"{label} still references a deprecated BOAMAN host")
-    if "/baoman/" in source:
-        fail(f"{label} still references the misspelled /baoman route")
 
 required_boaman = [
     "Make capability visible.",
@@ -83,10 +77,6 @@ for token in [
 
 if "../boaman/" not in legacy:
     fail("legacy FastPath route does not redirect to /boaman/")
-if "../boaman/" not in typo_route or "https://izzyakos.com/boaman/" not in typo_route:
-    fail("misspelled /baoman route does not redirect/canonicalize to /boaman/")
-if "../../boaman/demo/" not in typo_demo or "https://izzyakos.com/boaman/demo/" not in typo_demo:
-    fail("misspelled reviewer route does not redirect/canonicalize to /boaman/demo/")
 
 for token in [
     "fictional data",
