@@ -12,7 +12,7 @@ body{min-height:100vh}.top{position:sticky;top:0;z-index:20;background:rgba(7,17
 <body>
 <header class="top"><div class="shell topbar"><a class="brand" href="../"><span class="brand-mark">F</span><span>BOAMAN · FUNDMEISTER</span></a><div class="actions"><a class="btn btn-small btn-secondary" data-purpose="Read FUNDMEISTER product architecture" data-next="Opens the public FUNDMEISTER architecture page" href="../../fundmeister/">Product</a><a class="btn btn-small btn-secondary" data-purpose="Open IZZYAKOS company home" data-next="Returns to the company public site" href="../../">IZZYAKOS</a><button id="logout" class="smallBtn ghost hidden">Sign out</button></div></div></header>
 <main class="app"><div class="shell">
-<section id="login" class="login"><div class="eyebrow">Authorized project access</div><h1 >Sign in to BOAMAN · FUNDMEISTER.</h1><p class="section-copy">Authentication proves identity; it does not grant authority. Project visibility is separately controlled by FUNDMEISTER membership, role and project scope.</p><label for="email">Authorized email</label><input id="email" type="email" autocomplete="email" placeholder="name@company.org"><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button id="magic" class="gold">Send secure sign-in link</button><button id="google" class="ghost">Continue with Google</button></div><div id="notice" class="notice">Existing IZZYAKOS administrators use their approved identity. Partners, funders and institutions require explicit project authorization before data is returned.</div><p class="fine" style="margin-top:14px"><a href="mailto:izzyakosllc@gmail.com?subject=FUNDMEISTER%20authorized%20access">Request access</a></p></section>
+<section id="login" class="login"><div class="eyebrow">Authorized project access</div><h1 >Sign in to BOAMAN · FUNDMEISTER.</h1><p class="section-copy">Authentication proves identity; it does not grant authority. Project visibility is separately controlled by FUNDMEISTER membership, role and project scope.</p><label for="email">Authorized email</label><input id="email" type="email" autocomplete="email" placeholder="name@company.org"><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"><button id="google" class="gold">Continue with Google</button><button id="magic" class="ghost fmDisabled" disabled title="Email-link redirect is not enabled for this route yet.">Email link · redirect configuration pending</button></div><div id="notice" class="notice">Use the approved Google identity to enter this BOAMAN-scoped FUNDMEISTER workspace. Authentication proves identity; FUNDMEISTER role and project scope still control data access.</div><p class="fine" style="margin-top:14px"><a href="mailto:izzyakosllc@gmail.com?subject=FUNDMEISTER%20authorized%20access">Request access</a></p></section>
 
 <section id="workspace" class="hidden">
 <div class="head"><div><div class="eyebrow">BOAMAN capital workspace · powered by FUNDMEISTER</div><h1>Authorized workspace.</h1><p><strong id="userEmail"></strong> · <span id="role" class="rolePill">role</span></p></div><div class="fine">Scope is enforced in the database. Sign-in alone does not expose unrelated projects.</div></div>
@@ -114,8 +114,18 @@ async function signInEmail(){
   note(error?error.message:"Secure sign-in link sent. Check the mailbox.",!!error);
 }
 async function signInGoogle(){
-  const {error}=await supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin+"/boaman/fundmeister/"}});
-  if(error)note(error.message,true);
+  const popup=window.open("about:blank","fundmeister-auth","popup=yes,width=520,height=720");
+  if(!popup)return note("Google sign-in popup was blocked. Allow popups for izzyakos.com and try again.",true);
+  const {data,error}=await supabase.auth.signInWithOAuth({
+    provider:"google",
+    options:{
+      redirectTo:"https://izzyakos.com/boaman/fundmeister/",
+      skipBrowserRedirect:true
+    }
+  });
+  if(error||!data?.url){popup.close();return note(error?.message||"Google sign-in could not start.",true)}
+  popup.location.href=data.url;
+  note("Complete Google sign-in in the secure popup. This page will stay in FUNDMEISTER.");
 }
 function projectById(id){return (cache.projects||[]).find(p=>p.id===id)}
 function orgForProject(id){return projectById(id)?.organization_id||cache.access?.[0]?.organization_id||null}
@@ -344,6 +354,17 @@ $("#reportForm").addEventListener("submit",async e=>{
 });
 $("#testForm").addEventListener("submit",async e=>{e.preventDefault();const opt=$("#testProject").selectedOptions[0];const payload={organization_id:opt.dataset.org,project_id:$("#testProject").value,test_date:$("#testDate").value,scenario:$("#testScenario").value.trim(),result:$("#testResult").value,device_context:$("#testDevice").value.trim()||null,issue_count:Number($("#testIssues").value||0),persistence_observed:$("#testPersistence").value===""?null:$("#testPersistence").value==="true",stability_observed:$("#testStability").value===""?null:$("#testStability").value==="true",notes:$("#testNotes").value.trim()||null,test_type:"usability"};const {error}=await supabase.from("fm_validation_ops").insert(payload);$("#testNotice").classList.remove("hidden");$("#testNotice").textContent=error?error.message:"Validation evidence saved.";$("#testNotice").classList.toggle("error",!!error);if(!error){e.target.reset();await load()}});
 
+window.addEventListener("message",async(event)=>{
+  if(event.origin!=="https://boaman.izzyakos.com")return;
+  if(event.data?.type!=="fundmeister-auth-session")return;
+  const access_token=event.data?.session?.access_token;
+  const refresh_token=event.data?.session?.refresh_token;
+  if(!access_token||!refresh_token)return;
+  const {error}=await supabase.auth.setSession({access_token,refresh_token});
+  if(error)return note("Authenticated session could not be attached to FUNDMEISTER. "+error.message,true);
+  note("Authenticated. Loading BOAMAN · FUNDMEISTER…");
+  await load();
+});
 $("#magic").addEventListener("click",signInEmail);
 $("#google").addEventListener("click",signInGoogle);
 $("#logout").addEventListener("click",async()=>{await supabase.auth.signOut();location.reload()});
