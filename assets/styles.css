@@ -39,3 +39,11 @@ a { color:inherit; } img { max-width:100%; display:block; }
  .hero h1{font-size:clamp(2.25rem,11vw,3.45rem)}
  .section{padding:44px 0}
 }
+
+/* 2026-10-02 mobile acceptance lock: never scale/warp the company shell */
+html,body{width:100%;max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.site-header,.nav,.brand,.brand-logo,.brand-name,.btn,.card,.footer,.footer-grid{transform:none!important}
+.brand{min-width:0}.brand-name{white-space:normal;overflow-wrap:anywhere}.nav-links{min-width:0}.btn{white-space:normal;text-align:center}
+@media(max-width:850px){.nav{min-height:76px;gap:12px}.brand-logo{height:48px;max-width:64px}.brand-name{font-size:.84rem;letter-spacing:.07em}.nav-links{margin-left:auto}.nav-links .btn{min-width:88px}.footer-grid{display:grid;grid-template-columns:1fr;gap:14px}.footer-grid>*{min-width:0}.project-actions,.quickNav,.demo-actions{max-width:100%}}
+@media(max-width:520px){.shell{width:calc(100% - 28px)}.site-header .shell{width:calc(100% - 24px)}.nav{min-height:68px}.brand{gap:8px}.brand-logo{height:42px;max-width:54px}.brand-name{font-size:.76rem}.btn-small{min-height:42px;padding-inline:12px}.card,.hero-panel,.callout,.validation-card{max-width:100%;min-width:0}.truth-table{max-width:100%;overflow-x:auto}}
+@media(orientation:landscape) and (max-height:520px){.nav{min-height:58px}.brand-logo{height:38px;max-width:48px}.brand-name{font-size:.72rem}.hero{padding:34px 0 30px}.section{padding:38px 0}.footer{padding:28px 0}.btn{min-height:42px}}
