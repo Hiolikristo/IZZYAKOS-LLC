@@ -5,7 +5,8 @@ ROOT = Path(__file__).resolve().parents[1]
 BOAMAN = ROOT / "baoman" / "index.html"
 DEMO = ROOT / "baoman" / "demo" / "index.html"
 HOME = ROOT / "index.html"
-LEGACY = ROOT / "fastpath" / "index.html"\nOLD_ROUTE = ROOT / "boaman" / "index.html"
+LEGACY = ROOT / "fastpath" / "index.html"
+OLD_ROUTE = ROOT / "boaman" / "index.html"
 
 def fail(msg):
     print(f"FAIL: {msg}", file=sys.stderr)
@@ -18,13 +19,14 @@ for path in [BOAMAN, DEMO, HOME, LEGACY, OLD_ROUTE]:
 bo = BOAMAN.read_text(encoding="utf-8")
 demo = DEMO.read_text(encoding="utf-8")
 home = HOME.read_text(encoding="utf-8")
-legacy = LEGACY.read_text(encoding="utf-8")\nold_route = OLD_ROUTE.read_text(encoding="utf-8")
+legacy = LEGACY.read_text(encoding="utf-8")
+old_route = OLD_ROUTE.read_text(encoding="utf-8")
 
-# Canonical BOAMAN production is now boaman.izzyakos.com.
-# The stale short Vercel alias must never return to sponsor-facing surfaces.
-for label, source in [("BOAMAN page", bo), ("IZZYAKOS home", home), ("legacy FastPath redirect", legacy)]:
-    if "fastpath-v0.vercel.app" in source:
-        fail(f"{label} still references stale fastpath-v0.vercel.app")
+# Canonical BOAMAN public route is https://izzyakos.com/baoman/.
+# Deprecated BOAMAN hosts and stale short Vercel aliases must not return to sponsor-facing surfaces.
+for label, source in [("BOAMAN page", bo), ("IZZYAKOS home", home), ("legacy FastPath redirect", legacy), ("old BOAMAN route", old_route)]:
+    if "fastpath-v0.vercel.app" in source or "boaman.izzyakos.com" in source:
+        fail(f"{label} still references a deprecated BOAMAN host")
 
 required_boaman = [
     "Make capability visible.",
