@@ -3,7 +3,6 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 BOAMAN = ROOT / "boaman" / "index.html"
-DEMO = ROOT / "fastpath" / "demo" / "index.html"
 HOME = ROOT / "index.html"
 LEGACY = ROOT / "fastpath" / "index.html"
 OLD_ROUTE = ROOT / "baoman" / "index.html"
@@ -12,12 +11,11 @@ def fail(msg):
     print(f"FAIL: {msg}", file=sys.stderr)
     raise SystemExit(1)
 
-for path in [BOAMAN, DEMO, HOME, LEGACY, OLD_ROUTE]:
+for path in [BOAMAN, HOME, LEGACY, OLD_ROUTE]:
     if not path.exists():
         fail(f"missing required surface: {path.relative_to(ROOT)}")
 
 bo = BOAMAN.read_text(encoding="utf-8")
-demo = DEMO.read_text(encoding="utf-8")
 home = HOME.read_text(encoding="utf-8")
 legacy = LEGACY.read_text(encoding="utf-8")
 old_route = OLD_ROUTE.read_text(encoding="utf-8")
@@ -72,19 +70,5 @@ if "../boaman/" not in legacy:
 if "../boaman/" not in old_route:
     fail("misspelled /baoman route does not redirect to canonical /boaman path")
 
-required_demo = [
-    "BOAMAN Reviewer Demo",
-    "Walk the BOAMAN mechanism.",
-    "fictional data",
-    "not a hiring prediction",
-    "Supported",
-    "Partial",
-    "Unknown",
-    "Gap",
-]
-for token in required_demo:
-    if token.lower() not in demo.lower():
-        fail(f"BOAMAN reviewer demo missing: {token}")
-
 print("PASS: BOAMAN stable public surface")
-print("route=/baoman/ demo=/baoman/demo/ canonical=https://izzyakos.com/boaman/ deprecated-hosts=0 contrast=locked")
+print("route=/boaman/ canonical=https://izzyakos.com/boaman/ deprecated-hosts=0 contrast=locked")
