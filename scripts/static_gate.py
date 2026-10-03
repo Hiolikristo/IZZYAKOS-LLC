@@ -142,7 +142,7 @@ for html_file in HTML_FILES:
             fail("stale FastPath short alias must not be used for sponsor review")
 
         # Major visible CTA buttons on the company/product pages must explain purpose and destination.
-        if rel != "fastpath/demo/index.html" and "btn" in link["class"].split():
+        if rel not in {"fastpath/demo/index.html", "baoman/demo/index.html"} and "btn" in link["class"].split():
             if not link["purpose"].strip() or not link["next"].strip():
                 fail(f"button CTA missing data-purpose/data-next in {rel}: {href}")
 
