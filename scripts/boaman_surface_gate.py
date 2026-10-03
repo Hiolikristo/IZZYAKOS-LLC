@@ -2,10 +2,10 @@ from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-BOAMAN = ROOT / "boaman" / "index.html"
+BOAMAN = ROOT / "baoman" / "index.html"
 HOME = ROOT / "index.html"
 LEGACY = ROOT / "fastpath" / "index.html"
-OLD_ROUTE = ROOT / "baoman" / "index.html"
+OLD_ROUTE = ROOT / "boaman" / "index.html"
 FUNDMEISTER = ROOT / "boaman" / "fundmeister" / "index.html"
 
 def fail(msg):
@@ -22,9 +22,9 @@ legacy = LEGACY.read_text(encoding="utf-8")
 old_route = OLD_ROUTE.read_text(encoding="utf-8")
 fm = FUNDMEISTER.read_text(encoding="utf-8")
 
-# Canonical BOAMAN public route is https://izzyakos.com/boaman/.
+# Canonical BOAMAN public route is https://izzyakos.com/baoman/.
 # Deprecated BOAMAN hosts and stale short Vercel aliases must not return to sponsor-facing surfaces.
-for label, source in [("BOAMAN page", bo), ("IZZYAKOS home", home), ("legacy FastPath redirect", legacy)]:
+for label, source in [("IZZYAKOS home", home), ("legacy FastPath redirect", legacy), ("old BOAMAN route", old_route)]:
     if "fastpath-v0.vercel.app" in source or "boaman.izzyakos.com" in source:
         fail(f"{label} still references a deprecated BOAMAN host")
 
@@ -44,7 +44,10 @@ required_boaman = [
     ".cta.gold",
     ".cta.blue",
     ".cta.outline",
-    'href="./fundmeister/"',
+    '?workspace=1#/home',
+    '?workspace=1#/pilot',
+    '?workspace=1#/fundmeister',
+    'https://izzyakos.com/baoman/',
 ]
 for token in required_boaman:
     if token not in bo:
@@ -61,17 +64,17 @@ for token in contrast_contracts:
     if token not in bo:
         fail(f"BOAMAN contrast contract missing: {token}")
 
-if 'href="https://izzyakos.com/boaman/"' not in home:
+if 'href="https://izzyakos.com/baoman/"' not in home:
     fail("IZZYAKOS homepage does not launch accepted BOAMAN route")
-if 'href="./boaman/"' not in home:
+if 'href="./baoman/"' not in home:
     fail("IZZYAKOS homepage is missing the accepted BOAMAN system brief route")
-if 'href="https://izzyakos.com/boaman/#pilot"' not in home:
+if 'href="https://izzyakos.com/baoman/#pilot"' not in home:
     fail("IZZYAKOS homepage is missing the accepted BOAMAN pilot route")
 
-if "../boaman/" not in legacy:
-    fail("legacy FastPath route does not redirect to canonical BOAMAN path")
-if "../boaman/" not in old_route:
-    fail("misspelled /baoman route does not redirect to canonical /boaman path")
+if "../baoman/" not in legacy:
+    fail("legacy FastPath route does not redirect to accepted BOAMAN path")
+if "../baoman/" not in old_route:
+    fail("old /boaman route does not redirect to accepted /baoman path")
 
 
 # BOAMAN -> FUNDMEISTER click-loop contract.
@@ -104,4 +107,4 @@ for forbidden in [
         fail(f"BOAMAN FUNDMEISTER workspace contains candidate/deprecated route token: {forbidden}")
 
 print("PASS: BOAMAN stable public surface + FUNDMEISTER click loop")
-print("route=/boaman/ fundmeister=/boaman/fundmeister/ canonical=https://izzyakos.com/boaman/ candidate-bounce=0 deprecated-hosts=0 contrast=locked")
+print("route=/baoman/ fundmeister=/boaman/fundmeister/ canonical=https://izzyakos.com/baoman/ old-route-redirect=1 contrast=locked")
