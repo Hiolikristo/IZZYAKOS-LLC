@@ -51,3 +51,9 @@ html,body{width:100%;max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:1
 /* 2026-10-03 WebOne presentation cohesion */
 .founder-section{background:linear-gradient(180deg,rgba(201,154,46,.055),rgba(7,17,31,0))}.founder-section .card{min-height:100%}.founder-section .card p+p{margin-top:14px}.founder-ask{margin-top:18px}.founder-ask h3{margin-top:8px;font-size:clamp(1.55rem,3vw,2.15rem)}
 @media(max-width:850px){.founder-ask .btn{width:100%}}
+
+/* 2026-10-03 founder-requested company identity sizing */
+.brand-logo{height:104px;max-width:340px}
+@media(max-width:850px){.brand-logo{height:68px;max-width:96px}}
+@media(max-width:520px){.brand-logo{height:60px;max-width:82px}}
+@media(orientation:landscape) and (max-height:520px){.brand-logo{height:52px;max-width:72px}}
