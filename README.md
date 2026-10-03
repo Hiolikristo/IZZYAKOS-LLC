@@ -1,75 +1,80 @@
-# IZZYAKOS LLC — one system, four infrastructure layers
+# IZZYAKOS LLC — governed systems for consequential real-world handoffs
 
-Static, dependency-free company and reviewer site for the August 2026 Rev1 closeout.
+Static, dependency-free company, reviewer and funder surface for IZZYAKOS LLC.
 
-**Canonical Rev1 submission source:** `docs/REV1_CANONICAL_SUBMISSION_2026-08-18.md`
+**Canonical company domain:** `https://izzyakos.com`  
+**Current commercialization / Rev1 validation focus:** **BOAMAN**
 
-IZZYAKOS is presented as one infrastructure thesis expressed through four separate applications:
+IZZYAKOS is presented as one systems thesis expressed through distinct products with separate users, deployment boundaries and validation gates:
 
-- **FastPath / People** — workforce evidence and opportunity readiness
-- **TRACEBridge / Work** — operational integrity and traceability
-- **CHOPX / Movement** — last-mile fairness, consent and evidence
-- **My Accra International Market / Commerce** — merchant operations and field execution
+- **BOAMAN / People** — workforce evidence, jobs, training, support and opportunity pathways
+- **TRACEBridge / Work** — receiving, Quality, labeling, reconciliation and governed Tool Crib custody around IFS Cloud
+- **CHOPX / Movement** — last-mile fairness, PPEM economics, protected tips, consent, compliance and field evidence
+- **My Accra International Market / Commerce** — merchant storefront, inventory, receiving, pickup, location and owner operations
+- **Pantryster / Community infrastructure** — Columbus-first resource and partner coordination
+- **FUNDMEISTER / Stewardship** — project, capital, evidence and authorized funder-reporting operating system
 
-FastPath is the single current Rev1 market-validation priority. The other layers demonstrate repeatable systems discipline; they are not four simultaneous fundraising asks.
+The portfolio is cohesive because each product keeps identity, evidence, workflow state, authority and economic truth explicit. It is **not** presented as six simultaneous fundraising claims.
 
 ## Public routes
 
-- `/` — IZZYAKOS company thesis and four-layer system
-- `/fastpath/` — FastPath Rev1 / partner brief
-- `/fastpath/demo/` — account-free, fictional-data interactive reviewer demo
-- `/tracebridge/` — TRACEBridge infrastructure brief
-- `/chopx/` — CHOPX / ChopExpress infrastructure brief
-- `/accra/` — My Accra merchant implementation brief
+- `/` — company thesis, flagship systems and live-launch cards
+- `/boaman/` — BOAMAN company/product brief
+- `/fastpath/` — legacy transition/reviewer brief retained for continuity
+- `/fastpath/demo/` — fictional-data reviewer mechanism demo
+- `/tracebridge/` — TRACEBridge system brief; live review launches to `tracebridge-review.vercel.app`
+- `/chopx/` — CHOPX system brief; live driver surface launches to `chopexpress-driver-ui.vercel.app`
+- `/accra/` — My Accra merchant brief; live demo launches to `myaccraintmarket-demo.vercel.app`
+- `/pantryster/` — community infrastructure baseline
+- `/fundmeister/` — FUNDMEISTER capital/evidence operating system
+- `/funders/` — funder/sponsor diligence room with live system links and truth boundaries
+- `/control/` — private/internal company operating surface
 
-## FastPath review strategy
+## Live system routing
 
-The public reviewer path no longer depends on Vercel Authentication.
+The company site explains each product, while primary launch CTAs route to the real review/deployment surface when one is available:
 
-`/fastpath/demo/` demonstrates the core mechanism with fictional data:
+- BOAMAN → `https://boaman.izzyakos.com/`
+- TRACEBridge → `https://tracebridge-review.vercel.app/`
+- CHOPX → `https://chopexpress-driver-ui.vercel.app/`
+- My Accra International Market → `https://myaccraintmarket-demo.vercel.app/`
 
-1. specific job target;
-2. candidate-controlled evidence;
-3. Supported / Partial / Unknown / Gap mapping;
-4. gap-to-action routing;
-5. candidate-controlled output.
+## Truth boundary
 
-The demo is deliberately labeled as mechanism proof, **not** customer traction, a hiring prediction, a live job posting or a production candidate record.
+A working build, a successful deployment, field use, customer validation, enterprise authorization and revenue are different evidence states. Public copy must not collapse them.
 
-The deeper FastPath V0.6.1 application remains the authenticated release candidate until its production protection scope is intentionally changed and logged-out acceptance passes. Do not use the stale `fastpath-v0.vercel.app` alias as release evidence.
+Current examples:
 
-## Domain lock
-
-Canonical company domain: **`izzyakos.com`**.
-
-The repository contains `CNAME = izzyakos.com`. The domain is already registered. Publication still requires the hosting control plane to be enabled and the domain DNS to point at the selected host.
-
-The speech-to-text variant `iziacos.com` is not the company brand and must not replace IZZYAKOS in release materials.
+- **BOAMAN:** deployed MVP / pre-pilot; real-user, buyer, pricing and pilot validation remain active evidence gates.
+- **TRACEBridge:** v4.7 disconnected synthetic review with browser/assurance evidence; customer-specific IFS/identity/device/security authorization remains gated.
+- **CHOPX:** Sprint 5E controlled pilot-readiness architecture; provider identity, durable evidence, live pilot economics and regulated-service boundaries remain gated.
+- **My Accra:** merchant implementation; production backend/payment and physical store acceptance remain gated.
+- **FUNDMEISTER:** project/capital/evidence control plane; binding securities, legal, tax and filing determinations retain explicit professional/human review gates.
 
 ## Acceptance gates
 
-`IZZYAKOS Sponsor Surface Gate` validates all six public HTML surfaces for:
+`IZZYAKOS Sponsor Surface Gate` validates public HTML for:
 
 - dead / empty links;
 - broken local targets;
 - missing fragments;
 - placeholder URLs;
-- stale FastPath alias usage.
+- stale FastPath public aliases;
+- required product-explanation contracts;
+- CTA purpose/destination metadata.
 
-A separate reviewer-demo gate validates the five-step demo control contract and required truth-boundary language.
+The funder room is included in this acceptance surface.
+
+## Hosting and deployment
+
+`izzyakos.com` is currently published through **GitHub Pages** from this repository and uses `CNAME = izzyakos.com`. Product launch CTAs may route to separate Vercel deployments.
+
+This distinction is intentional: the company site is the portfolio/navigation layer; each product retains its own deployment boundary.
 
 ## Release discipline
 
-1. Keep FastPath as the one Rev1 market-validation ask.
-2. Keep public claims at MVP / pre-pilot level unless documented human/customer evidence exists.
-3. Do not expose confidential candidate information in the reviewer demo or video.
-4. Publish `izzyakos.com`, then test the exact domain logged out on desktop and mobile.
-5. Freeze the company URL, reviewer demo, full FastPath release SHA and final walkthrough together for the submission packet.
-
-## Current internal evidence
-
-- company/four-layer sponsor surface: source acceptance green;
-- account-free FastPath reviewer demo: acceptance green;
-- FastPath full build: deployment/build evidence green, production protection still intentional;
-- FastPath backend: 24/24 public tables have RLS enabled; controlled non-staff isolation probe returned zero unrelated candidate rows;
-- remaining release blocker: publish the company domain and complete live logged-out acceptance.
+1. Keep BOAMAN as the current Rev1 customer-validation focus.
+2. Keep each product's live launch separate from its explanatory company page.
+3. Present current engineering evidence without converting it into unproven adoption or revenue claims.
+4. Run the sponsor surface gate after any portfolio/link/content change.
+5. Verify the exact public domain on desktop and mobile after GitHub Pages publishes.
