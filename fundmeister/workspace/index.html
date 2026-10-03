@@ -75,48 +75,272 @@ body{min-height:100vh}.top{position:sticky;top:0;z-index:20;background:rgba(7,17
 </div></main>
 <script type="module">
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.108.1";
+
 const supabase=createClient("https://poqwirjoalxzrvdxzoip.supabase.co","sb_publishable_96g1_j55FJ49lf__NnsbEQ_wQORXcET");
-const $=s=>document.querySelector(s); const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
-const badge=v=>'<span class="state">'+esc(v||"—")+'</span>'; const fmtDate=v=>v?new Date(v+"T00:00:00").toLocaleDateString():"—";
-function note(t,e=false){$("#notice").textContent=t;$("#notice").classList.toggle("error",e)}
-async function loadTable(name,order){let q=supabase.from(name).select("*"); if(order)q=q.order(order,{ascending:true}); const {data,error}=await q;if(error)throw new Error(name+": "+error.message);return data||[]}
-async function signInEmail(){const email=$("#email").value.trim();if(!email)return note("Enter an email.",true);const {error}=await supabase.auth.signInWithOtp({email,options:{emailRedirectTo:window.location.origin+"/fundmeister/workspace/"}});note(error?error.message:"Secure sign-in link sent. Check the mailbox.",!!error)}
-async function signInGoogle(){const {error}=await supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin+"/fundmeister/workspace/"}});if(error)note(error.message,true)}
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+const money=v=>new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:2}).format(Number(v||0));
+const num=v=>Number(v||0);
+const badge=v=>'<span class="state">'+esc(v||"—")+'</span>';
+const fmtDate=v=>v?new Date(String(v).length<=10?v+"T12:00:00":v).toLocaleDateString():"—";
+const fmtDateTime=v=>v?new Date(v).toLocaleString():"—";
 const stages=["backlog","planned","in_progress","blocked","review","done"];
+const requestedProjectKey=new URLSearchParams(window.location.search).get("project")||"";
+let cache={};
+let currentRole="";
+let currentUserId="";
+
+function note(t,e=false){$("#notice").textContent=t;$("#notice").classList.toggle("error",e)}
 function canManage(role){return role==="founder_admin"||role==="project_manager"}
+function canFinance(role){return role==="founder_admin"||role==="finance"}
+function canBookkeep(role){return canFinance(role)||role==="bookkeeper"}
+function canUseFunds(role){return canFinance(role)||role==="project_manager"}
 function card(title,body,meta=""){return '<article class="box"><h3>'+esc(title)+'</h3><p>'+esc(body||"")+'</p>'+(meta?'<small>'+esc(meta)+'</small>':"")+'</article>'}
-async function load(){
- const {data:{session}}=await supabase.auth.getSession();
- if(!session){$("#login").classList.remove("hidden");$("#workspace").classList.add("hidden");$("#logout").classList.add("hidden");return}
- try{
-  const [access,projects,tasks,milestones,talent,capital,equipment,tests,events,relations,courses,professional]=await Promise.all([
-   loadTable("fm_my_access"),loadTable("fm_company_projects","name"),loadTable("fm_project_tasks","due_date"),loadTable("fm_milestones","target_date"),loadTable("fm_talent_needs","priority"),loadTable("fm_capital_needs","priority"),loadTable("fm_equipment_needs","priority"),loadTable("fm_validation_runs","test_date"),loadTable("fm_journey_events","occurred_at"),loadTable("fm_relationships","updated_at"),loadTable("fm_academy_courses","sequence_no"),loadTable("fm_professional_reviews","target_date")
-  ]);
-  if(!access.length||!projects.length){await supabase.auth.signOut();throw new Error("This identity is authenticated but not authorized for a FUNDMEISTER project.")}
-  const role=access[0].role; $("#userEmail").textContent=session.user.email||"Authorized user";$("#role").textContent=role;
-  $("#login").classList.add("hidden");$("#workspace").classList.remove("hidden");$("#logout").classList.remove("hidden");
-  $("#mProjects").textContent=projects.length;$("#mTasks").textContent=tasks.length;$("#mMilestones").textContent=milestones.length;$("#mTests").textContent=tests.length;$("#mTalent").textContent=talent.length;$("#mCapital").textContent=capital.length;
-  $("#projectCards").innerHTML=projects.map(p=>card(p.name,p.product_type,(p.department||"")+" · "+(p.lifecycle_stage||""))).join("");
-  $("#milestoneCards").innerHTML=milestones.length?milestones.map(m=>card(m.name,m.description,(m.project_name||"")+" · target "+fmtDate(m.target_date)+" · "+m.status+" · evidence "+m.evidence_state)).join(""):'<p class="empty">No visible milestones.</p>';
-  const by={}; stages.forEach(s=>by[s]=[]); tasks.forEach(t=>(by[t.stage]||by.backlog).push(t));
-  $("#kanbanBoard").innerHTML=stages.map(s=>'<div class="lane"><h3>'+esc(s.replaceAll("_"," "))+' · '+by[s].length+'</h3>'+by[s].map(t=>'<div class="task"><b>'+esc(t.title)+'</b><small>'+esc(t.project_name)+' · '+esc(t.priority)+' · due '+fmtDate(t.due_date)+'</small><small>'+esc(t.description||"")+'</small>'+(canManage(role)?'<select class="taskSelect" data-task="'+t.id+'">'+stages.map(x=>'<option value="'+x+'" '+(x===t.stage?'selected':'')+'>'+x.replaceAll("_"," ")+'</option>').join("")+'</select>':"")+'</div>').join("")+'</div>').join("");
-  document.querySelectorAll(".taskSelect").forEach(el=>el.addEventListener("change",async()=>{const {error}=await supabase.from("fm_task_ops").update({stage:el.value,progress_pct:el.value==="done"?100:undefined,updated_at:new Date().toISOString()}).eq("id",el.dataset.task);if(error){alert(error.message);await load()}}));
-  const t0=new Date("2026-09-23T00:00:00"),t1=new Date("2026-11-30T00:00:00"),span=t1-t0;
-  $("#gantt").innerHTML=tasks.filter(t=>t.start_date||t.due_date).map(t=>{const a=new Date((t.start_date||"2026-09-23")+"T00:00:00"),b=new Date((t.due_date||t.start_date||"2026-09-23")+"T00:00:00");const left=Math.max(0,Math.min(100,(a-t0)/span*100)),width=Math.max(2,Math.min(100-left,(b-a)/span*100+2));return '<div class="gRow"><div class="gName"><b>'+esc(t.title)+'</b><small>'+esc(t.project_name)+' · '+fmtDate(t.due_date)+'</small></div><div class="gTrack"><div class="gBar" style="left:'+left+'%;width:'+width+'%"></div></div></div>'}).join("");
-  $("#talent").innerHTML=talent.length?talent.map(x=>card(x.role_title,x.reason,(x.project_name||"Company")+" · "+x.priority+" · "+x.status)).join(""):'<p class="empty">No visible talent needs.</p>';
-  $("#capital").innerHTML=capital.length?capital.map(x=>card(x.title,x.reason,(x.project_name||"Company")+" · amount "+(x.amount_low==null?"TBD":"sourced")+" · "+x.status)).join(""):'<p class="empty">No visible capital needs.</p>';
-  $("#equipment").innerHTML=equipment.length?equipment.map(x=>card(x.item,x.reason,(x.project_name||"Company")+" · qty "+x.quantity+" · "+x.acquisition_model)).join(""):'<p class="empty">No visible equipment needs.</p>';
-  $("#tests").innerHTML=tests.length?tests.slice().reverse().map(x=>card(x.project_name+" · "+fmtDate(x.test_date),x.scenario,x.result+" · issues "+x.issue_count+" · persistence "+(x.persistence_observed===null?"unknown":x.persistence_observed?"observed":"not observed"))).join(""):'<p class="empty">No validation runs recorded yet. The BOAMAN Oct. 5 milestone requires at least five recorded tester sessions.</p>';
-  if(canManage(role)){ $("#testEntry").classList.remove("hidden");$("#testProject").innerHTML=projects.map(p=>'<option value="'+p.id+'" data-org="'+p.organization_id+'">'+esc(p.name)+'</option>').join("");$("#testDate").value=new Date().toISOString().slice(0,10)}
-  $("#events").innerHTML=events.length?events.slice().reverse().map(x=>card(x.title,x.summary,(x.project_name||"Company")+" · "+new Date(x.occurred_at).toLocaleString()+" · "+x.event_type)).join(""):'<p class="empty">No journey events recorded yet.</p>';
-  $("#relations").innerHTML=relations.length?relations.map(x=>card(x.organization_or_person,x.purpose,(x.project_name||"Company")+" · "+x.relationship_type+" · "+x.stage)).join(""):'<p class="empty">No CRM relationships recorded yet.</p>';
-  $("#courses").innerHTML=courses.map(x=>'<article class="box course"><span class="courseNum">'+x.sequence_no+'</span><div><h3>'+esc(x.title)+'</h3><p>'+esc(x.description)+'</p><small>'+esc(x.passing_rule||"")+'</small></div></article>').join("");
-  $("#professional").innerHTML=professional.length?professional.map(x=>card(x.review_type.toUpperCase()+" · "+x.topic,x.reason,(x.project_name||"Company")+" · "+x.status+" · target "+fmtDate(x.target_date))).join(""):'<p class="empty">No professional-review items visible.</p>';
- }catch(e){$("#workspace").classList.add("hidden");$("#login").classList.remove("hidden");note(e.message,true)}
+function table(headers,rows,empty="No records yet."){
+  if(!rows.length)return '<p class="empty">'+esc(empty)+'</p>';
+  return '<table><thead><tr>'+headers.map(x=>'<th>'+esc(x)+'</th>').join("")+'</tr></thead><tbody>'+rows.join("")+'</tbody></table>';
 }
+async function loadTable(name,order){
+  let q=supabase.from(name).select("*");
+  if(order)q=q.order(order,{ascending:true});
+  const {data,error}=await q;
+  if(error)throw new Error(name+": "+error.message);
+  return data||[];
+}
+async function signInEmail(){
+  const email=$("#email").value.trim();
+  if(!email)return note("Enter an email.",true);
+  const {error}=await supabase.auth.signInWithOtp({email,options:{emailRedirectTo:window.location.origin+"/fundmeister/workspace/"+window.location.search}});
+  note(error?error.message:"Secure sign-in link sent. Check the mailbox.",!!error);
+}
+async function signInGoogle(){
+  const {error}=await supabase.auth.signInWithOAuth({provider:"google",options:{redirectTo:window.location.origin+"/fundmeister/workspace/"+window.location.search}});
+  if(error)note(error.message,true);
+}
+function projectById(id){return (cache.projects||[]).find(p=>p.id===id)}
+function orgForProject(id){return projectById(id)?.organization_id||cache.access?.[0]?.organization_id||null}
+function defaultProjectId(){
+  return (cache.projects||[]).find(p=>p.project_key===requestedProjectKey)?.id || cache.projects?.[0]?.id || "";
+}
+function selectOptions(projects,includeCompany=false){
+  return (includeCompany?'<option value="">Company-wide</option>':"")+projects.map(p=>'<option value="'+p.id+'">'+esc(p.name)+'</option>').join("");
+}
+function ensureProjectSelect(id,includeCompany=false){
+  const el=$(id); if(!el)return;
+  const previous=el.value;
+  el.innerHTML=selectOptions(cache.projects||[],includeCompany);
+  const wanted=previous || (includeCompany?"":defaultProjectId());
+  if([...el.options].some(o=>o.value===wanted))el.value=wanted;
+}
+function setFormVisibility(){
+  ["#capEntry","#convertEntry","#poolForm"].forEach(s=>$(s)?.classList.toggle("hidden",!canFinance(currentRole)));
+  $("#uofEntry")?.classList.toggle("hidden",!canUseFunds(currentRole));
+  $("#accountEntry")?.classList.toggle("hidden",!canFinance(currentRole));
+  $("#transactionEntry")?.classList.toggle("hidden",!canBookkeep(currentRole));
+  $("#reportEntry")?.classList.toggle("hidden",!canFinance(currentRole));
+}
+function filterProject(rows,selectId){
+  const id=$(selectId)?.value||defaultProjectId();
+  return rows.filter(x=>x.project_id===id);
+}
+function renderCap(){
+  const projectId=$("#capProjectFilter")?.value||defaultProjectId();
+  const holders=(cache.holders||[]).filter(x=>x.project_id===projectId);
+  const securities=(cache.securities||[]).filter(x=>x.project_id===projectId);
+  const pools=(cache.pools||[]).filter(x=>x.project_id===projectId);
+  const converts=(cache.convertibles||[]).filter(x=>x.project_id===projectId&&["issued","approved"].includes(x.state));
+  const activeSecurities=securities.filter(x=>!["draft","cancelled","repurchased"].includes(x.state));
+  const issued=activeSecurities.reduce((s,x)=>s+num(x.as_converted_units||x.units),0);
+  const poolAuthorized=pools.reduce((s,x)=>s+num(x.authorized_units),0);
+  const poolGranted=pools.reduce((s,x)=>s+num(x.granted_units),0);
+  const fullyDiluted=issued+Math.max(0,poolAuthorized-poolGranted);
+  $("#capIssued").textContent=issued.toLocaleString();
+  $("#capPool").textContent=poolAuthorized.toLocaleString();
+  $("#capFD").textContent=fullyDiluted.toLocaleString();
+  $("#capConvertible").textContent=money(converts.reduce((s,x)=>s+num(x.principal_amount),0));
+  const unitsByHolder={};
+  activeSecurities.forEach(x=>unitsByHolder[x.holder_id]=(unitsByHolder[x.holder_id]||0)+num(x.as_converted_units||x.units));
+  $("#capTable").innerHTML=table(["Holder","Type","Recorded units","FD %","Status"],holders.map(h=>{
+    const units=unitsByHolder[h.id]||0;
+    const pct=fullyDiluted?units/fullyDiluted*100:0;
+    return '<tr><td>'+esc(h.display_name)+'</td><td>'+esc(h.holder_type)+'</td><td class="fmMoney">'+units.toLocaleString()+'</td><td>'+pct.toFixed(2)+'%</td><td>'+badge(h.status)+'</td></tr>';
+  }),"No cap-table holders recorded. FUNDMEISTER will not invent ownership.");
+  $("#securityTable").innerHTML=table(["Holder","Security","Units","Vesting","State","Evidence"],securities.map(x=>'<tr><td>'+esc(x.holder_name)+'</td><td>'+esc(x.security_type+(x.security_class?" · "+x.security_class:""))+'</td><td class="fmMoney">'+num(x.units).toLocaleString()+'</td><td>'+esc(String(x.cliff_months||0)+"m cliff / "+String(x.vesting_months||0)+"m")+'</td><td>'+badge(x.state)+'</td><td>'+esc(x.evidence_ref||"—")+'</td></tr>'),"No securities recorded.");
+  $("#optionPools").innerHTML=table(["Pool","Authorized","Granted","Available","Target","State"],pools.map(x=>'<tr><td>'+esc(x.pool_name)+'</td><td>'+num(x.authorized_units).toLocaleString()+'</td><td>'+num(x.granted_units).toLocaleString()+'</td><td>'+Math.max(0,num(x.authorized_units)-num(x.granted_units)).toLocaleString()+'</td><td>'+(x.target_pct==null?"—":num(x.target_pct).toFixed(2)+"%")+'</td><td>'+badge(x.state)+'</td></tr>'),"No option pool recorded.");
+  $("#issueHolder").innerHTML=holders.map(h=>'<option value="'+h.id+'" data-project="'+h.project_id+'" data-org="'+h.organization_id+'">'+esc(h.display_name)+'</option>').join("");
+}
+function renderConvertibles(){
+  const rows=filterProject(cache.convertibles||[],"#convertProjectFilter");
+  $("#convertibleTable").innerHTML=table(["Investor","Instrument","Amount","Cap","Discount","Interest","Issued","State","Evidence"],rows.map(x=>'<tr><td>'+esc(x.investor_name)+'</td><td>'+esc(x.instrument_type)+'</td><td class="fmMoney">'+money(x.principal_amount)+'</td><td class="fmMoney">'+(x.valuation_cap==null?"—":money(x.valuation_cap))+'</td><td>'+(x.discount_pct==null?"—":num(x.discount_pct).toFixed(2)+"%")+'</td><td>'+(x.interest_rate_pct==null?"—":num(x.interest_rate_pct).toFixed(2)+"%")+'</td><td>'+fmtDate(x.issued_at)+'</td><td>'+badge(x.state)+'</td><td>'+esc(x.evidence_ref||"—")+'</td></tr>'),"No SAFEs, notes or KISS instruments recorded.");
+}
+function renderUseFunds(){
+  const rows=filterProject(cache.uof||[],"#uofProjectFilter");
+  const requested=rows.reduce((s,x)=>s+num(x.requested_amount),0);
+  const approved=rows.reduce((s,x)=>s+num(x.approved_amount),0);
+  const spent=rows.reduce((s,x)=>s+num(x.spent_amount),0);
+  const remaining=rows.reduce((s,x)=>s+num(x.remaining_amount),0);
+  $("#uofRequested").textContent=money(requested);$("#uofApproved").textContent=money(approved);$("#uofSpent").textContent=money(spent);$("#uofRemaining").textContent=money(remaining);
+  $("#uofTable").innerHTML=table(["Category / item","Qty × cost","Requested","Approved","Spent","Remaining","Market proof","State","Source","Review"],rows.map(x=>{
+    const editable=canUseFunds(currentRole);
+    const source=x.vendor_url?'<a class="fmSource" href="'+esc(x.vendor_url)+'" target="_blank" rel="noreferrer">'+esc(x.vendor_name||"source")+' ↗</a>':esc(x.vendor_name||"—");
+    const controls=editable?'<div class="fmTableActions"><input class="uofApprovedEdit" data-id="'+x.id+'" type="number" min="0" step="0.01" value="'+esc(x.approved_amount??"")+'" aria-label="Approved amount"><select class="uofStateEdit" data-id="'+x.id+'"><option '+(x.state==="proposed"?"selected":"")+'>proposed</option><option '+(x.state==="review"?"selected":"")+'>review</option><option '+(x.state==="approved"?"selected":"")+'>approved</option><option '+(x.state==="committed"?"selected":"")+'>committed</option><option '+(x.state==="purchased"?"selected":"")+'>purchased</option><option '+(x.state==="reconciled"?"selected":"")+'>reconciled</option><option '+(x.state==="rejected"?"selected":"")+'>rejected</option></select><button class="uofSave smallBtn ghost" type="button" data-id="'+x.id+'">Save</button></div>':"read-only";
+    return '<tr><td><strong>'+esc(x.category)+'</strong><br>'+esc(x.item_name)+'</td><td>'+num(x.quantity)+' × '+money(x.unit_cost)+'</td><td>'+money(x.requested_amount)+'</td><td>'+money(x.approved_amount)+'</td><td>'+money(x.spent_amount)+'</td><td>'+money(x.remaining_amount)+'</td><td>'+badge(x.market_state)+'</td><td>'+badge(x.state)+'</td><td>'+source+'</td><td>'+controls+'</td></tr>';
+  }),"No use-of-funds items recorded. Add sourced line items instead of inventing a round-number ask.");
+  document.querySelectorAll(".uofSave").forEach(btn=>btn.onclick=async()=>{
+    const id=btn.dataset.id;
+    const approved=document.querySelector('.uofApprovedEdit[data-id="'+id+'"]').value;
+    const state=document.querySelector('.uofStateEdit[data-id="'+id+'"]').value;
+    const {error}=await supabase.from("fm_use_of_funds_ops").update({approved_amount:approved===""?null:Number(approved),state,updated_at:new Date().toISOString()}).eq("id",id);
+    if(error)alert(error.message); else await load();
+  });
+  const uofOptions=rows.map(x=>'<option value="'+x.id+'">'+esc(x.category+" · "+x.item_name)+'</option>').join("");
+  $("#txUof").innerHTML='<option value="">Unmapped</option>'+uofOptions;
+}
+function renderExpenses(){
+  const accounts=cache.accounts||[];
+  $("#accountsTable").innerHTML=table(["Institution","Account","Type","Last 4","Mode","Sync","Last sync"],accounts.map(x=>'<tr><td>'+esc(x.institution_name||"—")+'</td><td>'+esc(x.account_label||"—")+'</td><td>'+esc(x.account_type||"—")+'</td><td>'+esc(x.last_four||"—")+'</td><td>'+esc(x.provider||"—")+'</td><td>'+badge(x.sync_status)+'</td><td>'+fmtDateTime(x.last_synced_at)+'</td></tr>'),"No financial accounts registered.");
+  $("#bankConnections").innerHTML=table(["Provider","Institution","Status","Cadence","Last sync"],(cache.bankConnections||[]).map(x=>'<tr><td>'+esc(x.provider)+'</td><td>'+esc(x.institution_name||"—")+'</td><td>'+badge(x.status)+'</td><td>'+esc(x.sync_cadence)+'</td><td>'+fmtDateTime(x.last_synced_at)+'</td></tr>'),"No live bank/card provider connection exists.");
+  $("#txAccount").innerHTML='<option value="">No account / manual</option>'+accounts.map(x=>'<option value="'+x.id+'">'+esc((x.institution_name||"")+" · "+(x.account_label||x.provider))+'</option>').join("");
+  const tx=(cache.transactions||[]).slice().sort((a,b)=>String(b.posted_at||b.created_at).localeCompare(String(a.posted_at||a.created_at)));
+  $("#transactionsTable").innerHTML=table(["Date","Project","Counterparty","Amount","UOF","Evidence","Review","State"],tx.map(x=>'<tr><td>'+fmtDate(x.posted_at)+'</td><td>'+esc(x.project_name||"—")+'</td><td>'+esc(x.merchant_or_counterparty||x.description||"—")+'</td><td class="fmMoney">'+money(x.amount)+'</td><td>'+esc(x.use_of_funds_item_id?"mapped":"unmapped")+'</td><td>'+badge(x.evidence_state)+'</td><td>'+badge(x.review_state)+'</td><td>'+badge(x.state)+'</td></tr>'),"No transactions recorded.");
+  $("#expenseReviews").innerHTML=table(["Created","Project","Auto result","Rules","Notes","Resolution","Action"],(cache.reviews||[]).slice().sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at))).map(x=>{
+    const actions=(canFinance(currentRole)||currentRole==="accountant")&&x.resolution_state==="open"?'<div class="fmTableActions"><button class="reviewResolve smallBtn ghost" data-id="'+x.id+'" data-state="approved" type="button">Approve / explain</button><button class="reviewResolve smallBtn ghost" data-id="'+x.id+'" data-state="resolved" type="button">Resolve</button></div>':"—";
+    return '<tr><td>'+fmtDateTime(x.created_at)+'</td><td>'+esc(x.project_name||"—")+'</td><td>'+badge(x.auto_result)+'</td><td>'+esc((x.rule_codes||[]).join(", ")||"—")+'</td><td>'+esc(x.auto_notes||"—")+'</td><td>'+badge(x.resolution_state)+'</td><td>'+actions+'</td></tr>';
+  }),"No expense-review exceptions.");
+  document.querySelectorAll(".reviewResolve").forEach(btn=>btn.onclick=async()=>{
+    const notes=window.prompt("Resolution note (required for audit trail):","");
+    if(!notes)return;
+    const {error}=await supabase.from("fm_expense_review_ops").update({resolution_state:btn.dataset.state,resolution_notes:notes,resolved_by:currentUserId,resolved_at:new Date().toISOString(),updated_at:new Date().toISOString()}).eq("id",btn.dataset.id);
+    if(error)alert(error.message); else await load();
+  });
+}
+function renderLedger(){
+  const rows=(cache.ledger||[]).slice().sort((a,b)=>num(b.id)-num(a.id)).slice(0,150);
+  $("#ledgerTable").innerHTML=table(["#","Time","Project","Event","Entity","Previous hash","Event hash"],rows.map(x=>'<tr><td>'+esc(x.id)+'</td><td>'+fmtDateTime(x.created_at)+'</td><td>'+esc(projectById(x.project_id)?.name||"Company")+'</td><td>'+esc(x.event_type)+'</td><td>'+esc(x.entity_type+" · "+x.entity_id)+'</td><td class="fmHash">'+esc(x.previous_hash||"GENESIS")+'</td><td class="fmHash">'+esc(x.event_hash)+'</td></tr>'),"No ledger events visible for this scope.");
+}
+function renderReports(){
+  $("#reportSubs").innerHTML=table(["Report","Project","Cadence","Recipients","Channel","Delivery","Next run"],(cache.reportSubs||[]).map(x=>'<tr><td>'+esc(x.report_name)+'</td><td>'+esc(projectById(x.project_id)?.name||"Company-wide")+'</td><td>'+esc(x.cadence)+'</td><td>'+esc((x.recipients||[]).join(", ")||"—")+'</td><td>'+esc(x.delivery_channel)+'</td><td>'+badge(x.delivery_state)+'</td><td>'+fmtDateTime(x.next_run_at)+'</td></tr>'),"No expenditure-report schedule configured.");
+  const snaps=(cache.reportSnapshots||[]).slice().sort((a,b)=>String(b.generated_at).localeCompare(String(a.generated_at))).slice(0,100);
+  $("#reportSnapshots").innerHTML=table(["Generated","Period","Project","Spend","Transactions","Open reviews","Delivery"],snaps.map(x=>{
+    const p=x.payload||{};
+    return '<tr><td>'+fmtDateTime(x.generated_at)+'</td><td>'+fmtDateTime(x.period_start)+' → '+fmtDateTime(x.period_end)+'</td><td>'+esc(projectById(x.project_id)?.name||"Company-wide")+'</td><td class="fmMoney">'+money(p.spend_total)+'</td><td>'+esc(p.transaction_count||0)+'</td><td>'+esc(p.open_review_count||0)+'</td><td>'+badge(x.delivery_state)+'</td></tr>';
+  }),"No scheduled statement snapshots generated yet.");
+}
+function wireProjectFilters(){
+  ["#capProjectFilter","#convertProjectFilter","#uofProjectFilter","#holderProject","#poolProject","#convertProject","#uofProject","#txProject"].forEach(id=>ensureProjectSelect(id,false));
+  ensureProjectSelect("#reportProject",true);
+  $("#capProjectFilter").onchange=renderCap;
+  $("#convertProjectFilter").onchange=renderConvertibles;
+  $("#uofProjectFilter").onchange=renderUseFunds;
+  $("#holderProject").onchange=()=>{const pid=$("#holderProject").value;$("#capProjectFilter").value=pid;renderCap()};
+  $("#uofProject").onchange=()=>{const pid=$("#uofProject").value;$("#uofProjectFilter").value=pid;renderUseFunds()};
+  $("#txProject").onchange=()=>{const pid=$("#txProject").value;$("#uofProjectFilter").value=pid;renderUseFunds()};
+}
+async function load(){
+  const {data:{session}}=await supabase.auth.getSession();
+  if(!session){$("#login").classList.remove("hidden");$("#workspace").classList.add("hidden");$("#logout").classList.add("hidden");return}
+  try{
+    currentUserId=session.user.id;
+    const [access,projects,tasks,milestones,talent,capital,equipment,tests,events,relations,courses,professional,holders,securities,convertibles,pools,uof,accounts,bankConnections,transactions,reviews,ledger,reportSubs,reportSnapshots]=await Promise.all([
+      loadTable("fm_my_access"),loadTable("fm_company_projects","name"),loadTable("fm_project_tasks","due_date"),loadTable("fm_milestones","target_date"),
+      loadTable("fm_talent_needs","priority"),loadTable("fm_capital_needs","priority"),loadTable("fm_equipment_needs","priority"),loadTable("fm_validation_runs","test_date"),
+      loadTable("fm_journey_events","occurred_at"),loadTable("fm_relationships","updated_at"),loadTable("fm_academy_courses","sequence_no"),loadTable("fm_professional_reviews","target_date"),
+      loadTable("fm_cap_table_holders"),loadTable("fm_security_issuances"),loadTable("fm_convertibles"),loadTable("fm_option_pools"),
+      loadTable("fm_use_of_funds"),loadTable("fm_financial_accounts"),loadTable("fm_bank_connections"),loadTable("fm_transactions"),
+      loadTable("fm_expense_reviews"),loadTable("fm_immutable_ledger"),loadTable("fm_report_subscriptions"),loadTable("fm_report_snapshots")
+    ]);
+    if(!access.length||!projects.length){await supabase.auth.signOut();throw new Error("This identity is authenticated but not authorized for a FUNDMEISTER project.")}
+    cache={access,projects,tasks,milestones,talent,capital,equipment,tests,events,relations,courses,professional,holders,securities,convertibles,pools,uof,accounts,bankConnections,transactions,reviews,ledger,reportSubs,reportSnapshots};
+    currentRole=access[0].role;
+    $("#userEmail").textContent=session.user.email||"Authorized user";$("#role").textContent=currentRole;
+    $("#login").classList.add("hidden");$("#workspace").classList.remove("hidden");$("#logout").classList.remove("hidden");
+    $("#mProjects").textContent=projects.length;$("#mTasks").textContent=tasks.length;$("#mMilestones").textContent=milestones.length;$("#mTests").textContent=tests.length;$("#mTalent").textContent=talent.length;$("#mCapital").textContent=capital.length;
+    $("#projectCards").innerHTML=projects.map(p=>card(p.name,p.product_type,(p.department||"")+" · "+(p.lifecycle_stage||""))).join("");
+    $("#milestoneCards").innerHTML=milestones.length?milestones.map(m=>card(m.name,m.description,(m.project_name||"")+" · target "+fmtDate(m.target_date)+" · "+m.status+" · evidence "+m.evidence_state)).join(""):'<p class="empty">No visible milestones.</p>';
+    const by={};stages.forEach(s=>by[s]=[]);tasks.forEach(t=>(by[t.stage]||by.backlog).push(t));
+    $("#kanbanBoard").innerHTML=stages.map(s=>'<div class="lane"><h3>'+esc(s.replaceAll("_"," "))+' · '+by[s].length+'</h3>'+by[s].map(t=>'<div class="task"><b>'+esc(t.title)+'</b><small>'+esc(t.project_name)+' · '+esc(t.priority)+' · due '+fmtDate(t.due_date)+'</small><small>'+esc(t.description||"")+'</small>'+(canManage(currentRole)?'<select class="taskSelect" data-task="'+t.id+'">'+stages.map(x=>'<option value="'+x+'" '+(x===t.stage?'selected':'')+'>'+x.replaceAll("_"," ")+'</option>').join("")+'</select>':"")+'</div>').join("")+'</div>').join("");
+    document.querySelectorAll(".taskSelect").forEach(el=>el.onchange=async()=>{const {error}=await supabase.from("fm_task_ops").update({stage:el.value,progress_pct:el.value==="done"?100:undefined,updated_at:new Date().toISOString()}).eq("id",el.dataset.task);if(error)alert(error.message);else await load()});
+    const t0=new Date("2026-09-23T00:00:00"),t1=new Date("2026-11-30T00:00:00"),span=t1-t0;
+    $("#gantt").innerHTML=tasks.filter(t=>t.start_date||t.due_date).map(t=>{const a=new Date((t.start_date||"2026-09-23")+"T00:00:00"),b=new Date((t.due_date||t.start_date||"2026-09-23")+"T00:00:00");const left=Math.max(0,Math.min(100,(a-t0)/span*100)),width=Math.max(2,Math.min(100-left,(b-a)/span*100+2));return '<div class="gRow"><div class="gName"><b>'+esc(t.title)+'</b><small>'+esc(t.project_name)+' · '+fmtDate(t.due_date)+'</small></div><div class="gTrack"><div class="gBar" style="left:'+left+'%;width:'+width+'%"></div></div></div>'}).join("");
+    $("#talent").innerHTML=talent.length?talent.map(x=>card(x.role_title,x.reason,(x.project_name||"Company")+" · "+x.priority+" · "+x.status)).join(""):'<p class="empty">No visible talent needs.</p>';
+    $("#capital").innerHTML=capital.length?capital.map(x=>card(x.title,x.reason,(x.project_name||"Company")+" · amount "+(x.amount_low==null?"TBD":"sourced")+" · "+x.status)).join(""):'<p class="empty">No visible capital needs.</p>';
+    $("#equipment").innerHTML=equipment.length?equipment.map(x=>card(x.item,x.reason,(x.project_name||"Company")+" · qty "+x.quantity+" · "+x.acquisition_model)).join(""):'<p class="empty">No visible equipment needs.</p>';
+    $("#tests").innerHTML=tests.length?tests.slice().reverse().map(x=>card(x.project_name+" · "+fmtDate(x.test_date),x.scenario,x.result+" · issues "+x.issue_count+" · persistence "+(x.persistence_observed===null?"unknown":x.persistence_observed?"observed":"not observed"))).join(""):'<p class="empty">No validation runs recorded yet.</p>';
+    if(canManage(currentRole)){$("#testEntry").classList.remove("hidden");$("#testProject").innerHTML=projects.map(p=>'<option value="'+p.id+'" data-org="'+p.organization_id+'">'+esc(p.name)+'</option>').join("");$("#testDate").value=new Date().toISOString().slice(0,10)}
+    $("#events").innerHTML=events.length?events.slice().reverse().map(x=>card(x.title,x.summary,(x.project_name||"Company")+" · "+fmtDateTime(x.occurred_at)+" · "+x.event_type)).join(""):'<p class="empty">No journey events recorded yet.</p>';
+    $("#relations").innerHTML=relations.length?relations.map(x=>card(x.organization_or_person,x.purpose,(x.project_name||"Company")+" · "+x.relationship_type+" · "+x.stage)).join(""):'<p class="empty">No CRM relationships recorded yet.</p>';
+    $("#courses").innerHTML=courses.map(x=>'<article class="box course"><span class="courseNum">'+x.sequence_no+'</span><div><h3>'+esc(x.title)+'</h3><p>'+esc(x.description)+'</p><small>'+esc(x.passing_rule||"")+'</small></div></article>').join("");
+    $("#professional").innerHTML=professional.length?professional.map(x=>card(x.review_type.toUpperCase()+" · "+x.topic,x.reason,(x.project_name||"Company")+" · "+x.status+" · target "+fmtDate(x.target_date))).join(""):'<p class="empty">No professional-review items visible.</p>';
+    wireProjectFilters();setFormVisibility();renderCap();renderConvertibles();renderUseFunds();renderExpenses();renderLedger();renderReports();
+    if(!$("#txDate").value)$("#txDate").value=new Date().toISOString().slice(0,10);
+  }catch(e){$("#workspace").classList.add("hidden");$("#login").classList.remove("hidden");note(e.message,true)}
+}
+
+$("#holderForm").addEventListener("submit",async e=>{
+  e.preventDefault();const pid=$("#holderProject").value;
+  const payload={organization_id:orgForProject(pid),project_id:pid,display_name:$("#holderName").value.trim(),holder_type:$("#holderType").value,contact_ref:$("#holderContact").value.trim()||null,status:"active"};
+  const {error}=await supabase.from("fm_cap_table_holder_ops").insert(payload);
+  $("#holderNotice").classList.remove("hidden");$("#holderNotice").textContent=error?error.message:"Holder recorded.";$("#holderNotice").classList.toggle("error",!!error);
+  if(!error){e.target.reset();await load()}
+});
+$("#issuanceForm").addEventListener("submit",async e=>{
+  e.preventDefault();const holder=(cache.holders||[]).find(x=>x.id===$("#issueHolder").value);if(!holder)return;
+  const converted=$("#issueConverted").value,price=$("#issuePrice").value;
+  const payload={organization_id:holder.organization_id,project_id:holder.project_id,holder_id:holder.id,security_type:$("#issueType").value,units:Number($("#issueUnits").value),as_converted_units:converted===""?null:Number(converted),purchase_or_strike_price:price===""?null:Number(price),grant_or_issue_date:$("#issueDate").value||null,vesting_months:Number($("#issueVesting").value||0),cliff_months:Number($("#issueCliff").value||0),state:$("#issueState").value,evidence_ref:$("#issueEvidence").value.trim()||null};
+  const {error}=await supabase.from("fm_security_issuance_ops").insert(payload);
+  $("#issueNotice").classList.remove("hidden");$("#issueNotice").textContent=error?error.message:"Security record saved.";$("#issueNotice").classList.toggle("error",!!error);
+  if(!error){e.target.reset();await load()}
+});
+$("#poolForm").addEventListener("submit",async e=>{
+  e.preventDefault();const pid=$("#poolProject").value,existing=(cache.pools||[]).find(x=>x.project_id===pid);
+  const payload={organization_id:orgForProject(pid),project_id:pid,pool_name:"Equity Incentive Pool",authorized_units:Number($("#poolUnits").value),target_pct:$("#poolPct").value===""?null:Number($("#poolPct").value),state:$("#poolState").value,updated_at:new Date().toISOString()};
+  let res=existing?await supabase.from("fm_option_pool_ops").update(payload).eq("id",existing.id):await supabase.from("fm_option_pool_ops").insert(payload);
+  $("#poolNotice").classList.remove("hidden");$("#poolNotice").textContent=res.error?res.error.message:"Option pool saved.";$("#poolNotice").classList.toggle("error",!!res.error);
+  if(!res.error)await load();
+});
+$("#convertForm").addEventListener("submit",async e=>{
+  e.preventDefault();const pid=$("#convertProject").value;
+  const payload={organization_id:orgForProject(pid),project_id:pid,investor_name:$("#convertInvestor").value.trim(),instrument_type:$("#convertType").value,principal_amount:Number($("#convertAmount").value),valuation_cap:$("#convertCap").value===""?null:Number($("#convertCap").value),discount_pct:$("#convertDiscount").value===""?null:Number($("#convertDiscount").value),interest_rate_pct:$("#convertInterest").value===""?null:Number($("#convertInterest").value),issued_at:$("#convertDate").value||null,maturity_date:$("#convertMaturity").value||null,state:$("#convertState").value,evidence_ref:$("#convertEvidence").value.trim()||null};
+  const {error}=await supabase.from("fm_convertible_ops").insert(payload);
+  $("#convertNotice").classList.remove("hidden");$("#convertNotice").textContent=error?error.message:"Convertible instrument saved.";$("#convertNotice").classList.toggle("error",!!error);
+  if(!error){e.target.reset();await load()}
+});
+$("#uofForm").addEventListener("submit",async e=>{
+  e.preventDefault();const pid=$("#uofProject").value;
+  const payload={organization_id:orgForProject(pid),project_id:pid,category:$("#uofCategory").value.trim(),item_name:$("#uofItem").value.trim(),quantity:Number($("#uofQty").value||1),unit_cost:Number($("#uofUnitCost").value||0),approved_amount:$("#uofApprovedAmount").value===""?null:Number($("#uofApprovedAmount").value),committed_amount:Number($("#uofCommittedAmount").value||0),vendor_name:$("#uofVendor").value.trim()||null,vendor_url:$("#uofVendorUrl").value.trim()||null,quote_or_sku:$("#uofQuote").value.trim()||null,market_state:$("#uofMarket").value,price_verified_at:$("#uofMarket").value==="unverified"?null:new Date().toISOString(),priority:$("#uofPriority").value,state:$("#uofState").value,notes:$("#uofNotes").value.trim()||null};
+  const {error}=await supabase.from("fm_use_of_funds_ops").insert(payload);
+  $("#uofNotice").classList.remove("hidden");$("#uofNotice").textContent=error?error.message:"Use-of-funds item saved.";$("#uofNotice").classList.toggle("error",!!error);
+  if(!error){e.target.reset();await load()}
+});
+$("#accountForm").addEventListener("submit",async e=>{
+  e.preventDefault();const org=cache.access?.[0]?.organization_id;
+  const payload={organization_id:org,provider:$("#acctProvider").value,provider_account_ref:$("#acctProvider").value+"-"+crypto.randomUUID(),account_label:$("#acctLabel").value.trim(),account_type:$("#acctType").value,currency:$("#acctCurrency").value.trim()||"USD",sync_status:"not_connected",institution_name:$("#acctInstitution").value.trim()||null,last_four:$("#acctLast4").value.trim()||null,account_status:"active"};
+  const {error}=await supabase.from("fm_financial_account_ops").insert(payload);
+  $("#accountNotice").classList.remove("hidden");$("#accountNotice").textContent=error?error.message:"Bookkeeping account registered. This is not a live bank connection.";$("#accountNotice").classList.toggle("error",!!error);
+  if(!error){e.target.reset();await load()}
+});
+$("#transactionForm").addEventListener("submit",async e=>{
+  e.preventDefault();const pid=$("#txProject").value,account=$("#txAccount").value;
+  const payload={organization_id:orgForProject(pid),account_id:account||null,project_id:pid,use_of_funds_item_id:$("#txUof").value||null,provider_transaction_ref:"manual-"+crypto.randomUUID(),posted_at:$("#txDate").value+"T12:00:00",amount:Number($("#txAmount").value),currency:"USD",transaction_type:$("#txType").value,merchant_or_counterparty:$("#txMerchant").value.trim()||null,description:$("#txDescription").value.trim()||null,category:$("#txCategory").value.trim()||null,state:"ingested",source_method:"manual",evidence_state:$("#txEvidence").value,review_state:"pending"};
+  const {error}=await supabase.from("fm_transaction_ops").insert(payload);
+  $("#txNotice").classList.remove("hidden");$("#txNotice").textContent=error?error.message:"Transaction recorded. Automatic use-of-funds/evidence review executed.";$("#txNotice").classList.toggle("error",!!error);
+  if(!error){e.target.reset();$("#txDate").value=new Date().toISOString().slice(0,10);await load()}
+});
+$("#reportForm").addEventListener("submit",async e=>{
+  e.preventDefault();const pid=$("#reportProject").value||null,delivery=$("#reportDelivery").value;
+  const recipients=$("#reportRecipients").value.split(",").map(x=>x.trim()).filter(Boolean);
+  const payload={organization_id:pid?orgForProject(pid):cache.access?.[0]?.organization_id,project_id:pid,report_name:$("#reportName").value.trim()||"Statement of Expenditure",cadence:$("#reportCadence").value,recipients,delivery_channel:delivery,delivery_state:delivery==="email"?"provider_pending":"workspace_only",active:true,next_run_at:new Date().toISOString()};
+  const {error}=await supabase.from("fm_report_subscriptions").insert(payload);
+  $("#reportNotice").classList.remove("hidden");$("#reportNotice").textContent=error?error.message:(delivery==="email"?"Schedule saved. Snapshot generation is active; outbound email remains queued until an email provider is configured.":"Workspace report schedule saved.");$("#reportNotice").classList.toggle("error",!!error);
+  if(!error)await load();
+});
 $("#testForm").addEventListener("submit",async e=>{e.preventDefault();const opt=$("#testProject").selectedOptions[0];const payload={organization_id:opt.dataset.org,project_id:$("#testProject").value,test_date:$("#testDate").value,scenario:$("#testScenario").value.trim(),result:$("#testResult").value,device_context:$("#testDevice").value.trim()||null,issue_count:Number($("#testIssues").value||0),persistence_observed:$("#testPersistence").value===""?null:$("#testPersistence").value==="true",stability_observed:$("#testStability").value===""?null:$("#testStability").value==="true",notes:$("#testNotes").value.trim()||null,test_type:"usability"};const {error}=await supabase.from("fm_validation_ops").insert(payload);$("#testNotice").classList.remove("hidden");$("#testNotice").textContent=error?error.message:"Validation evidence saved.";$("#testNotice").classList.toggle("error",!!error);if(!error){e.target.reset();await load()}});
-$("#magic").addEventListener("click",signInEmail);$("#google").addEventListener("click",signInGoogle);$("#logout").addEventListener("click",async()=>{await supabase.auth.signOut();location.reload()});
+
+$("#magic").addEventListener("click",signInEmail);
+$("#google").addEventListener("click",signInGoogle);
+$("#logout").addEventListener("click",async()=>{await supabase.auth.signOut();location.reload()});
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".panel").forEach(x=>x.classList.remove("active"));b.classList.add("active");$("#"+b.dataset.tab).classList.add("active")}));
-supabase.auth.onAuthStateChange(()=>load());load();
+supabase.auth.onAuthStateChange(()=>load());
+load();
 </script>
 </body></html>
