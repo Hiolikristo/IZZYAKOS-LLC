@@ -39,8 +39,7 @@ CONTENT_CONTRACTS = {
         "Capital discipline", "FUNDMEISTER",
     ],
     "boaman/fundmeister/index.html": [
-        "BOAMAN · FUNDMEISTER", "Authorized project access", "Cap table", "SAFEs / Notes",
-        "Use of funds", "Accounts / Expenses", "Immutable ledger", "Reports",
+        "BOAMAN · FUNDMEISTER", "same operational origin as BOAMAN authentication", "Open FUNDMEISTER inside BOAMAN",
     ],
     "tracebridge/index.html": [
         "IFS Cloud", "Quality", "label", "physical verification", "Tool Crib", "SCAN OUT", "SCAN IN", "receiving",
@@ -147,8 +146,8 @@ for html_file in HTML_FILES:
             fail(f"placeholder URL in {rel}: {href}")
 
         parsed = urlparse(href)
-        if parsed.scheme in {"http", "https"} and parsed.netloc in {"fastpath-v0.vercel.app","boaman.izzyakos.com"}:
-            fail("deprecated BOAMAN/FastPath host must not be used for sponsor review")
+        if parsed.scheme in {"http", "https"} and parsed.netloc == "fastpath-v0.vercel.app":
+            fail("deprecated FastPath Vercel host must not be used for sponsor review")
 
         # Major visible CTA buttons on the company/product pages must explain purpose and destination.
         if rel not in {"fastpath/demo/index.html", "baoman/demo/index.html"} and "btn" in link["class"].split():
@@ -168,5 +167,5 @@ for html_file in HTML_FILES:
 
 print("PASS: IZZYAKOS sponsor surface static gate")
 print("pages=" + ",".join(str(p.relative_to(ROOT)) for p in HTML_FILES))
-print("dead_href=0 placeholder_url=0 broken_local_target=0 stale_fastpath_alias=0")
+print("dead_href=0 placeholder_url=0 broken_local_target=0 stale_fastpath_alias=0 operational_boaman_domain=allowed")
 print("product_explanation_contract=present cta_purpose_metadata=present")
