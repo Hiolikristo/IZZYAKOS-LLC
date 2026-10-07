@@ -11,6 +11,7 @@ HTML_FILES = [
     ROOT / "fastpath" / "index.html",
     ROOT / "fastpath" / "demo" / "index.html",
     ROOT / "boaman" / "index.html",
+    ROOT / "boaman" / "participate" / "index.html",
     ROOT / "boaman" / "fundmeister" / "index.html",
     ROOT / "tracebridge" / "index.html",
     ROOT / "chopx" / "index.html",
@@ -32,8 +33,11 @@ CONTENT_CONTRACTS = {
         "FastPath is now BOAMAN", "workforce-intelligence", "Open BOAMAN",
     ],
     "boaman/index.html": [
-        "BOAMAN", "Make capability visible.", "Make opportunity reachable.", "Customer-discovery comparison",
-        "Capital discipline", "FUNDMEISTER", "Enter interactive BOAMAN",
+        "BOAMAN", "hiring fit", "retention", "Customer-discovery comparison",
+        "Capital discipline", "FUNDMEISTER", "Enter interactive BOAMAN", "survey", "pilot",
+    ],
+    "boaman/participate/index.html": [
+        "BOAMAN", "Secure participant portal", "Buyer / workforce", "Worker / candidate", "Non-binding LOI",
     ],
     "boaman/demo/index.html": [
         "BOAMAN reviewer demo", "fictional data", "candidate-controlled", "not a hiring prediction",
@@ -65,8 +69,8 @@ CONTENT_CONTRACTS = {
         "Investor/Funder Reporting", "FUNDMEISTER Academy", "IZZYAKOS is the first test case",
     ],
     "control/index.html": [
-        "Private company operations", "Truth boundary", "Portfolio", "Kanban", "Gantt",
-        "Talent", "Capital & Equipment", "Validation", "Funding & Budget", "Email Registry", "Audit",
+        "IZZYAKOS company control", "Company Control now lives inside BOAMAN", "BOAMAN Founder Control",
+        "FUNDMEISTER", "Open BOAMAN Company Login",
     ],
     "funders/index.html": [
         "Funder", "sponsor", "BOAMAN", "TRACEBridge", "CHOPX", "My Accra",
