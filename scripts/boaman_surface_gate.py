@@ -7,12 +7,13 @@ HOME = ROOT / "index.html"
 LEGACY = ROOT / "fastpath" / "index.html"
 DEMO = ROOT / "boaman" / "demo" / "index.html"
 FUNDMEISTER = ROOT / "boaman" / "fundmeister" / "index.html"
+PARTICIPATE = ROOT / "boaman" / "participate" / "index.html"
 
 def fail(msg):
     print(f"FAIL: {msg}", file=sys.stderr)
     raise SystemExit(1)
 
-for path in [BOAMAN, HOME, LEGACY, DEMO, FUNDMEISTER]:
+for path in [BOAMAN, HOME, LEGACY, DEMO, FUNDMEISTER, PARTICIPATE]:
     if not path.exists():
         fail(f"missing required surface: {path.relative_to(ROOT)}")
 
@@ -21,6 +22,7 @@ home = HOME.read_text(encoding="utf-8")
 legacy = LEGACY.read_text(encoding="utf-8")
 demo = DEMO.read_text(encoding="utf-8")
 fm = FUNDMEISTER.read_text(encoding="utf-8")
+participate = PARTICIPATE.read_text(encoding="utf-8")
 
 # Canonical public route is https://izzyakos.com/boaman/.
 for label, source in [
@@ -33,8 +35,9 @@ for label, source in [
         fail(f"{label} still references a deprecated BOAMAN host")
 
 required_boaman = [
-    "Make capability visible.",
-    "Make opportunity reachable.",
+    "Recognize real capability.",
+    "Hire for fit.",
+    "retention",
     "BOAMAN · IZZYAKOS LLC · PRE-PILOT",
     "Customer-discovery comparison",
     "LinkedIn",
@@ -48,14 +51,25 @@ required_boaman = [
     ".cta.gold",
     ".cta.blue",
     ".cta.outline",
-    '?workspace=1#/home',
-    '?workspace=1#/pilot',
-    '?workspace=1#/fundmeister',
+    'href="./participate/"',
+    'https://boaman-pantrysterllcs-projects-b7b5c455.vercel.app/#/home',
+    'https://boaman-pantrysterllcs-projects-b7b5c455.vercel.app/#/pilot',
+    'https://boaman-pantrysterllcs-projects-b7b5c455.vercel.app/#/fundmeister',
     'https://izzyakos.com/boaman/',
 ]
 for token in required_boaman:
     if token not in bo:
         fail(f"BOAMAN stable surface missing contract token: {token}")
+
+for token in [
+    "Secure participant portal",
+    "Buyer / workforce",
+    "Worker / candidate",
+    "Non-binding LOI",
+    'https://boaman-pantrysterllcs-projects-b7b5c455.vercel.app/#/participate',
+]:
+    if token not in participate:
+        fail(f"BOAMAN participation bridge missing contract token: {token}")
 
 contrast_contracts = [
     ".cta.gold{background:var(--gold);color:var(--ink)}",
@@ -70,7 +84,7 @@ for token in contrast_contracts:
 for token in [
     'href="https://izzyakos.com/boaman/"',
     'href="./boaman/"',
-    'href="https://izzyakos.com/boaman/#pilot"',
+    'href="https://boaman-pantrysterllcs-projects-b7b5c455.vercel.app/#/pilot"',
 ]:
     if token not in home:
         fail(f"IZZYAKOS homepage missing canonical BOAMAN CTA: {token}")
