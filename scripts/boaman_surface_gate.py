@@ -84,7 +84,7 @@ for token in contrast_contracts:
 for token in [
     'href="https://izzyakos.com/boaman/"',
     'href="./boaman/"',
-    'href="https://izzyakos.com/boaman/#pilot"',
+    'href="https://boaman-pantrysterllcs-projects-b7b5c455.vercel.app/#/pilot"',
 ]:
     if token not in home:
         fail(f"IZZYAKOS homepage missing canonical BOAMAN CTA: {token}")
