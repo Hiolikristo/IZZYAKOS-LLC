@@ -3,16 +3,144 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BOAMAN Survey — IZZYAKOS LLC</title>
+<meta name="theme-color" content="#031429">
+<title>BOAMAN Discovery Survey — IZZYAKOS LLC</title>
 <style>
-html,body{margin:0;height:100%;background:#031429;font-family:Arial,sans-serif}
-header{height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 14px;color:#fff;background:#031429}
-a{color:#ffc72c;text-decoration:none;font-weight:700}
-iframe{width:100%;height:calc(100% - 58px);border:0;background:#fff}
+:root{--navy:#031429;--gold:#ffc72c;--ink:#102033;--muted:#5b6775;--line:#dce2e8;--bg:#f4f7fa;--white:#fff;--ok:#0b6b3a;--bad:#a21d2d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,Arial,sans-serif;line-height:1.5}
+header{position:sticky;top:0;z-index:10;background:var(--navy);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:0 2px 12px #0002}
+header strong{font-size:18px}header a{color:var(--gold);text-decoration:none;font-weight:800}
+main{max-width:900px;margin:0 auto;padding:20px 14px 50px}
+.hero{background:linear-gradient(135deg,#031429,#0a3159);color:#fff;border-radius:18px;padding:24px;margin-bottom:16px}
+.hero p{margin:6px 0;color:#d8e5f2}.hero h1{font-size:clamp(28px,6vw,44px);line-height:1.05;margin:8px 0 12px}
+.badge{display:inline-block;background:var(--gold);color:#2f2600;font-weight:900;border-radius:999px;padding:5px 10px;font-size:12px;letter-spacing:.04em}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0;box-shadow:0 5px 18px #10203310}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px}.tabs button{border:1px solid var(--line);background:#fff;padding:13px;border-radius:12px;font-weight:800;color:var(--ink);cursor:pointer}.tabs button.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+h2{margin:0 0 6px;font-size:24px}.intro{margin:0 0 18px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:6px}.wide{grid-column:1/-1}
+label{font-weight:750;font-size:14px}input,select,textarea{width:100%;font:inherit;border:1px solid #bfc8d2;border-radius:10px;padding:12px;background:#fff;color:var(--ink)}textarea{min-height:96px;resize:vertical}input:focus,select:focus,textarea:focus{outline:3px solid #ffc72c55;border-color:#c49a00}
+.check{display:flex;align-items:flex-start;gap:9px;font-weight:600}.check input{width:20px;height:20px;margin-top:2px;flex:0 0 auto}
+.submit{width:100%;border:0;border-radius:12px;background:var(--gold);color:#2b2200;font-size:17px;font-weight:900;padding:15px;cursor:pointer}.submit:disabled{opacity:.6;cursor:wait}
+.note{font-size:13px;color:var(--muted)}.status{display:none;margin-top:14px;padding:13px;border-radius:10px;font-weight:800}.status.ok{display:block;background:#e7f7ee;color:var(--ok)}.status.bad{display:block;background:#fdecef;color:var(--bad)}
+.honeypot{position:absolute;left:-9999px;opacity:0;pointer-events:none}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:18px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.hero{padding:20px}.card{padding:15px}header strong{font-size:16px}}
 </style>
 </head>
 <body>
 <header><strong>BOAMAN · IZZYAKOS LLC</strong><a href="../">Back to BOAMAN</a></header>
-<iframe title="BOAMAN Discovery Survey" src="https://boaman-pantrysterllcs-projects-b7b5c455.vercel.app/participate"></iframe>
+<main>
+<section class="hero">
+<span class="badge">INTERACTIVE ONLINE SURVEY</span>
+<h1>BOAMAN Discovery Survey</h1>
+<p>Complete this on your phone or computer. Nothing needs to be downloaded. Your responses support BOAMAN product-validation research and pilot design.</p>
+</section>
+
+<section class="card">
+<div class="tabs">
+<button id="buyerTab" class="active" type="button">Organization / workforce partner</button>
+<button id="workerTab" type="button">Worker / candidate</button>
+</div>
+</section>
+
+<form id="buyerForm" class="card" data-kind="buyer">
+<h2>Buyer / workforce partner discovery</h2>
+<p class="intro">Answer from your actual workflow. We are testing whether screening and candidate-to-role fit contribute to turnover; we are not assuming that they do.</p>
+<div class="grid">
+<div class="field"><label>Organization *</label><input name="organization" autocomplete="organization" required></div>
+<div class="field"><label>Your name *</label><input name="participantName" autocomplete="name" required></div>
+<div class="field"><label>Your role / title *</label><input name="role" autocomplete="organization-title" required></div>
+<div class="field"><label>Organization type</label><select name="segment"><option>Employer</option><option>Workforce program</option><option>Staffing / recruiting</option><option>Training provider</option><option>Public-sector workforce</option></select></div>
+<div class="field wide"><label>Organization street address</label><input name="organizationAddress1" autocomplete="street-address"></div>
+<div class="field"><label>City</label><input name="organizationCity" autocomplete="address-level2"></div>
+<div class="field"><label>State / province</label><input name="organizationState" autocomplete="address-level1"></div>
+<div class="field"><label>ZIP / postal code</label><input name="organizationPostalCode" autocomplete="postal-code"></div>
+<div class="field"><label>Organization website</label><input type="url" name="organizationWebsite" placeholder="https://"></div>
+<div class="field"><label>Business contact email *</label><input type="email" name="contactEmail" autocomplete="email" required></div>
+<div class="field"><label>Contact phone</label><input type="tel" name="contactPhone" autocomplete="tel"></div>
+<div class="field"><label>Approx. workforce / caseload size</label><select name="workforceSize"><option>Unknown</option><option>1-49</option><option>50-249</option><option>250-999</option><option>1,000-4,999</option><option>5,000+</option></select></div>
+<div class="field"><label>Hires / placements per month</label><select name="hiresPerMonth"><option>Unknown</option><option>0-5</option><option>6-20</option><option>21-50</option><option>51-100</option><option>100+</option></select></div>
+<div class="field"><label>Turnover / poor-fit pain (1 low – 5 severe) *</label><input type="number" min="1" max="5" name="pain" required></div>
+<div class="field"><label>Where is loss most visible?</label><select name="retentionWindow"><option>Unknown</option><option>Before interview / screened out</option><option>Offer / no-show</option><option>First 30 days</option><option>31-60 days</option><option>61-90 days</option><option>After 90 days</option></select></div>
+<div class="field wide"><label>Which roles are hardest to fill or keep?</label><textarea name="hardRoles"></textarea></div>
+<div class="field wide"><label>What tools or systems are involved in screening?</label><textarea name="currentTools"></textarea></div>
+<div class="field wide"><label>How do you determine whether a candidate can actually do the work?</label><textarea name="screening"></textarea></div>
+<div class="field wide"><label>Do qualified people ever get screened out before a human understands their real skills? What makes you say that?</label><textarea name="missedTalent"></textarea></div>
+<div class="field wide"><label>What causes early turnover here? *</label><textarea name="turnoverCauses" required></textarea></div>
+<div class="field wide"><label>What does that cost or disrupt operationally?</label><textarea name="impact"></textarea></div>
+<div class="field"><label>Annual recruiting / ATS / HR software spend</label><select name="softwareSpend"><option>Unknown / cannot share</option><option>Under $5k</option><option>$5k-$25k</option><option>$25k-$100k</option><option>$100k-$500k</option><option>$500k+</option></select></div>
+<div class="field"><label>Who owns the problem / budget?</label><input name="budgetOwner"></div>
+<div class="field wide"><label>What candidate evidence would make you more confident about fit?</label><textarea name="neededEvidence"></textarea></div>
+<div class="field wide"><label>What metric would have to improve for you to keep paying for a solution?</label><textarea name="successMetric"></textarea></div>
+<div class="field"><label>Would you consider a bounded pilot?</label><select name="pilotInterest"><option>Unknown</option><option>Yes</option><option>Maybe</option><option>No</option></select></div>
+<div class="field"><label>What pilot price/range feels reasonable, if any?</label><input name="pilotPrice"></div>
+<div class="field wide"><label>What would stop you from trying it?</label><textarea name="objection"></textarea></div>
+<div class="field wide"><label>Exact quote or key wording you want preserved</label><textarea name="quote"></textarea></div>
+<div class="field wide honeypot" aria-hidden="true"><label>Leave blank</label><input name="websiteConfirm" tabindex="-1" autocomplete="off"></div>
+<label class="check wide"><input type="checkbox" name="consentResearch" required>I permit IZZYAKOS LLC / BOAMAN to retain this response for product-validation research. *</label>
+<label class="check wide"><input type="checkbox" name="consentFollowup">I permit follow-up about discovery or a possible pilot.</label>
+<div class="wide"><button class="submit" type="submit">Submit buyer/workforce response</button><div class="status" aria-live="polite"></div></div>
+</div>
+</form>
+
+<form id="workerForm" class="card" data-kind="worker" hidden>
+<h2>Worker / candidate discovery</h2>
+<p class="intro">This survey asks whether real capability is visible in hiring and what affects early job success and retention.</p>
+<div class="grid">
+<div class="field"><label>Your name or participant code *</label><input name="participantName" required></div>
+<div class="field"><label>Current status</label><select name="status"><option>Employed</option><option>Looking for work</option><option>Underemployed</option><option>Training / education</option><option>Other</option></select></div>
+<div class="field"><label>Follow-up email (optional)</label><input type="email" name="contactEmail" autocomplete="email"></div>
+<div class="field"><label>Target role / field</label><input name="targetRole"></div>
+<div class="field"><label>Relevant experience</label><select name="experience"><option>Under 1 year</option><option>1-2 years</option><option>3-5 years</option><option>6-10 years</option><option>10+ years</option></select></div>
+<div class="field"><label>Application / ATS frustration (1 low – 5 severe) *</label><input type="number" min="1" max="5" name="pain" required></div>
+<div class="field"><label>How well does your resume show your ability? (1-5)</label><input type="number" min="1" max="5" name="representation"></div>
+<div class="field wide"><label>What can you do that your resume or job title does not show well?</label><textarea name="hiddenSkills"></textarea></div>
+<div class="field wide"><label>Where do you usually get stuck or rejected? *</label><textarea name="friction" required></textarea></div>
+<div class="field wide"><label>Have titles, credentials, keywords or application questions failed to reflect what you can actually do? Give an example.</label><textarea name="mismatch"></textarea></div>
+<div class="field wide"><label>What would help you stay and succeed in the first 90 days?</label><textarea name="retentionNeed"></textarea></div>
+<div class="field wide"><label>What should an employer be allowed to see, and what should stay private?</label><textarea name="trust"></textarea></div>
+<div class="field wide"><label>What would make you use BOAMAN again?</label><textarea name="returnReason"></textarea></div>
+<div class="field wide"><label>Exact quote or key wording you want preserved</label><textarea name="quote"></textarea></div>
+<div class="field wide honeypot" aria-hidden="true"><label>Leave blank</label><input name="websiteConfirm" tabindex="-1" autocomplete="off"></div>
+<label class="check wide"><input type="checkbox" name="consentResearch" required>I permit IZZYAKOS LLC / BOAMAN to retain this response for product-validation research. *</label>
+<label class="check wide"><input type="checkbox" name="consentFollowup">I permit follow-up about discovery or BOAMAN research.</label>
+<div class="wide"><button class="submit" type="submit">Submit worker/candidate response</button><div class="status" aria-live="polite"></div></div>
+</div>
+</form>
+
+<section class="card"><strong>Privacy note:</strong> Submit only information you are comfortable sharing for BOAMAN product-validation research. Survey responses do not create an employment, customer, partnership, or purchase obligation.</section>
+</main>
+<footer>BOAMAN is an IZZYAKOS LLC initiative.</footer>
+
+<script>
+const API="https://poqwirjoalxzrvdxzoip.supabase.co/rest/v1/boaman_public_discovery_submissions";
+const KEY="sb_publishable_96g1_j55FJ49lf__NnsbEQ_wQORXcET";
+const buyerTab=document.getElementById("buyerTab"),workerTab=document.getElementById("workerTab"),buyerForm=document.getElementById("buyerForm"),workerForm=document.getElementById("workerForm");
+function show(kind){const buyer=kind==="buyer";buyerForm.hidden=!buyer;workerForm.hidden=buyer;buyerTab.classList.toggle("active",buyer);workerTab.classList.toggle("active",!buyer);window.scrollTo({top:0,behavior:"smooth"})}
+buyerTab.addEventListener("click",()=>show("buyer"));workerTab.addEventListener("click",()=>show("worker"));
+function formRecord(form){const fd=new FormData(form),o={};for(const [k,v] of fd.entries())o[k]=v;for(const cb of form.querySelectorAll('input[type="checkbox"]'))o[cb.name]=cb.checked;delete o.websiteConfirm;return o}
+async function submitForm(e){
+ e.preventDefault();
+ const form=e.currentTarget,kind=form.dataset.kind,status=form.querySelector(".status"),button=form.querySelector(".submit"),fd=new FormData(form);
+ status.className="status";status.textContent="";
+ if(fd.get("websiteConfirm")) return;
+ const record=formRecord(form);
+ const payload={submission_kind:kind,participant_name:String(record.participantName||""),organization:String(record.organization||""),contact_email:String(record.contactEmail||""),consent_research:true,consent_followup:Boolean(record.consentFollowup),record,source:"izzyakos-company-site",client_nonce:crypto.randomUUID()};
+ button.disabled=true;button.textContent="Submitting…";
+ try{
+   const res=await fetch(API,{method:"POST",headers:{"apikey":KEY,"Authorization":"Bearer "+KEY,"Content-Type":"application/json","Prefer":"return=minimal"},body:JSON.stringify(payload)});
+   if(!res.ok) throw new Error("Submission failed");
+   form.reset();
+   status.className="status ok";
+   status.textContent="Submitted successfully. Confirmation: "+payload.client_nonce;
+   button.textContent=kind==="buyer"?"Submit buyer/workforce response":"Submit worker/candidate response";
+ }catch(err){
+   status.className="status bad";
+   status.textContent="The survey could not be submitted. Please keep this page open and try again.";
+   button.textContent="Try submission again";
+ }finally{button.disabled=false}
+}
+buyerForm.addEventListener("submit",submitForm);workerForm.addEventListener("submit",submitForm);
+</script>
 </body>
 </html>
