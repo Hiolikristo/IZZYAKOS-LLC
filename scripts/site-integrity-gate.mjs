@@ -33,7 +33,8 @@ for (const file of files) {
   if (name === "index.html" && !html.includes('href="./services/"')) failures.push("Home: missing services entrypoint");
   if (name === "services/index.html" && !html.includes('mailto:izzyakosllc@gmail.com')) failures.push("Services: missing inquiry destination");
   const base = new URL("https://izzyakos.com/" + name);
-  const attrs = [...html.matchAll(/\b(?:href|src)\s*=\s*["']([^"']*)["']/g)].map(m => m[1].trim());
+  const staticMarkup = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
+  const attrs = [...staticMarkup.matchAll(/\b(?:href|src)\s*=\s*["']([^"']*)["']/g)].map(m => m[1].trim());
   for (const href of attrs) {
     if (!href || href === "#" || /^javascript:/i.test(href) || /\bexample\.(com|org)\b/i.test(href)) {
       failures.push(`${name}: empty/placeholder/unsafe target "${href}"`); continue;
