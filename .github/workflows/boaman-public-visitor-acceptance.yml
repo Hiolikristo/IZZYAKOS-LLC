@@ -1,0 +1,57 @@
+name: BOAMAN external visitor acceptance
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'boaman/**'
+      - 'scripts/boaman-public-visitor-smoke.mjs'
+      - '.github/workflows/boaman-public-visitor-acceptance.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'boaman/**'
+      - 'scripts/boaman-public-visitor-smoke.mjs'
+      - '.github/workflows/boaman-public-visitor-acceptance.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 12 * * *'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: boaman-external-visitor-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  browser-acceptance:
+    name: Anonymous mobile and desktop visitor test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install browser test dependencies
+        run: |
+          npm install --no-save --no-audit --no-fund --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Syntax check
+        run: node --check scripts/boaman-public-visitor-smoke.mjs
+      - name: Test first-time employer and worker flow from external network
+        run: node scripts/boaman-public-visitor-smoke.mjs
+      - name: Preserve visitor screenshots when artifact storage permits
+        if: always()
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: boaman-visitor-screenshots-${{ github.run_id }}
+          path: artifacts/*.png
+          if-no-files-found: ignore
+          retention-days: 3
