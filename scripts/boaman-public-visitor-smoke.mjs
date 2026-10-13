@@ -66,7 +66,7 @@ for (const [mode, options] of [
     assert.equal(await page.getByRole("link", { name: /Request a 15-minute discovery conversation by email/i }).count(), 1);
     const html = await page.content();
     assert(!/http-equiv=["']refresh/i.test(html), "Unexpected forced meta-refresh");
-    assert(!/window\\.location\\.replace\\(/i.test(html), "Unexpected forced JS redirect");
+    assert(!html.includes("window.location.replace("), "Unexpected forced JS redirect");
     await page.screenshot({ path: "artifacts/" + mode + "-participate.png", fullPage: true });
   });
 
@@ -79,9 +79,9 @@ for (const [mode, options] of [
 
   await check(mode + " / interactive app loads current employer view", async () => {
     await visit(APP + "#/home");
-    await page.getByRole("link", { name: /Employer \\/ Buyer View/i }).first().waitFor({ timeout: 15000 });
+    await page.getByRole("link", { name: /Employer.*Buyer View/i }).first().waitFor({ timeout: 15000 });
     assert(!/Authentication Required|Vercel Authentication|Deployment Protection/i.test(await page.locator("body").innerText()), "Vercel protection or login wall");
-    await page.getByRole("link", { name: /Employer \\/ Buyer View/i }).first().click();
+    await page.getByRole("link", { name: /Employer.*Buyer View/i }).first().click();
     await page.waitForTimeout(500);
     assert.match(new URL(page.url()).hash, /employers/);
     assert.match(await page.locator("body").innerText(), /Reduce hiring guesswork/i);
@@ -90,7 +90,7 @@ for (const [mode, options] of [
 
   await check(mode + " / secure portal is honest about sign-in", async () => {
     await visit(APP + "#/participate");
-    await page.getByRole("heading", { name: /Discovery Survey \\+ Non-Binding Pilot Interest/i }).waitFor({ timeout: 15000 });
+    await page.getByRole("heading", { name: /Discovery Survey.*Non-Binding Pilot Interest/i }).waitFor({ timeout: 15000 });
     assert.match(await page.locator("body").innerText(), /Sign in to submit/i);
     await page.screenshot({ path: "artifacts/" + mode + "-secure-portal.png", fullPage: true });
   });
