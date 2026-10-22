@@ -1,0 +1,1 @@
+{"name":"izzyakos-broadcastkit","version":"1.0.0-preview","private":true,"type":"module","engines":{"node":">=20"},"scripts":{"start":"node app/server.mjs","test":"node --test test/*.test.mjs"},"license":"MIT"}
